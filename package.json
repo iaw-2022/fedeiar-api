@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/iaw-2022/fedeiar-api/issues"
   },
-  "homepage": "https://github.com/iaw-2022/fedeiar-api#readme"
+  "homepage": "https://github.com/iaw-2022/fedeiar-api#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
