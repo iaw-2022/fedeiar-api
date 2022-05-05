@@ -26,7 +26,7 @@ router.get('/users/:name', user.getUserByName);
 
 router.get('/games', game.getGames);
 router.get('/games/:game_name', game.getGameByName);
-router.post('/games', game.createUser);
+router.post('/games', game.createGame);
 router.put('/games/:game_name', game.updateUser);
 router.delete('/games/:game_name', game.deleteUser);
 

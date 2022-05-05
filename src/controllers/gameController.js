@@ -26,7 +26,7 @@ const getGameByName = (request, response) => {
     });
 }
 
-const createUser = (request, response) => {
+const createGame = (request, response) => {
     if(!request.body.game_name){
         response.status(400).send("'game_name' field is required.");
         return;
@@ -44,20 +44,8 @@ const createUser = (request, response) => {
     });
 }
 
-const updateUser = (request, response) => {
+const updateUser = async (request, response) => {
     let oldGameName = request.params.game_name;
-    /*
-    pool.query(`SELECT * FROM games WHERE game_name='${oldGameName}'`, (error, results) => {
-        if(error){
-            // que error puede haber?
-            return;
-        }
-        if(results.rows.length == 0){
-            response.status(404).send(`game ${oldGameName} doesn't exists`);
-            return;
-        }
-    });
-    */
 
     if(!request.body.game_name){
         response.status(400).send("'game_name' field is required.");
@@ -100,7 +88,7 @@ const deleteUser = (request, response) => {
 module.exports = {
     getGames,
     getGameByName,
-    createUser,
+    createGame,
     updateUser,
     deleteUser
 }
