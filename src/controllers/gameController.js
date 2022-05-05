@@ -22,26 +22,47 @@ const getGameByName = (request, response) => {
             response.status(404).send(`game ${gameName} doesn't exists`);
             return;
         }
-        response.status(200).send(result.rows);
+        response.status(200).send(result.rows[0]);
     });
 }
 
-const createGame = (request, response) => {
-    if(!request.body.game_name){
+const createGameWithCategories = async (request, response) => {
+    const game = request.body;
+    if(!game.game_name){
         response.status(400).send("'game_name' field is required.");
         return;
     }
+    if(!game.categories || game.categories.length == 0){
+        response.status(400).send("'categories' field is required and is must not be empty");
+        return;
+    }
+    game.categories = [...new Set(game.categories)]; // Elimina categorias duplicadas
+    
 
-    const game = request.body;
     currentDate = dateTime.create().format('Y-m-d H:M:S');
-    let insertQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES('${game.game_name}', '${currentDate}', '${currentDate}')`;
-    pool.query(insertQuery, (error, result) => {
-        if(error){
-            response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
-            return;
+    let insertGameQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES('${game.game_name}', '${currentDate}', '${currentDate}')`;
+
+    try{
+        const result = await pool.query(insertGameQuery);
+        //response.status(201).send("Game created succesfully."); // como hago para devolver el juego insertado? mas que nada para mostrar el ID.
+    } catch (error){
+        response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
+        return;
+    }
+
+    try{
+        console.log("llegue1");
+        let resultGame = await pool.query(`SELECT * FROM games WHERE game_name='${game.game_name}'`);
+        let game_id = resultGame[0].rows.id;
+        console.log("llegue2"); //NO ESTÁ LLEGANDO ACA, CONTINUAR DESDE ACA Y ARREGLAR. CAPAZ AHORA SE ARREGLO AGREGANDO ROWS.
+        for(let category of game.categories){
+            let insertCategoryQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES(${game_id}, '${category}', '${currentDate}', '${currentDate}')`;
+            await pool.query(insertCategoryQuery);
         }
-        response.status(201).send("Game updated succesfully."); // como hago para devolver el juego insertado? mas que nada para mostrar el ID.
-    });
+        response.status(201).send("Game and categories created succesfully.");
+    } catch(error){
+        response.status(400).send("Error!");
+    }
 }
 
 const updateUser = async (request, response) => {
@@ -88,7 +109,7 @@ const deleteUser = (request, response) => {
 module.exports = {
     getGames,
     getGameByName,
-    createGame,
+    createGameWithCategories,
     updateUser,
     deleteUser
 }
