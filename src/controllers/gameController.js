@@ -31,8 +31,8 @@ const createGameWithCategories = async (request, response) => {
         response.status(400).send("'game_name' field is required.");
         return;
     }
-    if(!game.categories || game.categories.length == 0){
-        response.status(400).send("'categories' field is required and is must not be empty");
+    if(!game.categories || !Array.isArray(game.categories) ||game.categories.length == 0){
+        response.status(400).send("'categories' array field is required and is must not be an empty array");
         return;
     }
     game.categories = [...new Set(game.categories)]; // Elimina categorias duplicadas
@@ -60,7 +60,7 @@ const createGameWithCategories = async (request, response) => {
     }
 }
 
-const updateUser = async (request, response) => {
+const updateGame = async (request, response) => {
     let oldGameName = request.params.game_name;
 
     if(!request.body.game_name){
@@ -84,7 +84,7 @@ const updateUser = async (request, response) => {
     }
 }
 
-const deleteUser = async (request, response) => {
+const deleteGame = async (request, response) => {
     let gameName = request.params.game_name;
     let deleteQuery = `DELETE FROM games WHERE game_name='${gameName}'`;
 
@@ -105,6 +105,6 @@ module.exports = {
     getGames,
     getGameByName,
     createGameWithCategories,
-    updateUser,
-    deleteUser
+    updateGame,
+    deleteGame
 }

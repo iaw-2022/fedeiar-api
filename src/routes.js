@@ -27,23 +27,25 @@ router.get('/users/:name', user.getUserByName);
 router.get('/games', game.getGames);
 router.get('/games/:game_name', game.getGameByName);
 router.post('/games', game.createGameWithCategories);
-router.put('/games/:game_name', game.updateUser);
-router.delete('/games/:game_name', game.deleteUser);
+router.put('/games/:game_name', game.updateGame);
+router.delete('/games/:game_name', game.deleteGame);
 
 // ---------------------------------------------- CATEGORIES ----------------------------------------------
 
 router.get('/games/:game_name/categories', category.getCategories);
+router.post('/games/:game_name/category', category.addCategoryToGame);
+router.post('/games/:game_name/categories', category.updateCategories);
 
 // ---------------------------------------------- VIDEOS ----------------------------------------------
 
 router.get('/videos', video.getVideos);
-
 router.get('/videos/:id', video.getVideoById);
-
 // esto es de videos o de juegos?
 router.get('/games/:game_name/videos', video.getVideosOfGame);
-
 router.get('/games/:game_name/:category_name/videos', video.getVideosOfGameAndCategory);
+router.post('/videos', video.createVideo);
+router.put('/videos/:video_id', video.updateVideo);
+router.delete('/videos/:video_id', video.deleteVideo);
 
 
 // EXPORTAR
