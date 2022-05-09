@@ -7,7 +7,7 @@ const getCategories = async (request, response) => {
     try{
         const result = await pool.query(getQuery);
         response.status(200).send(result.rows);
-    }catch(error){
+    } catch(error){
 
     }
 }
