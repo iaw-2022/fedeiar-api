@@ -4,24 +4,23 @@ const dateTime = require('node-datetime');
 const getGames = async (request, response) => {
     try{
         let result = await pool.query("SELECT * FROM games");
-        response.status(200).send(result.rows);
+        response.status(200).json(result.rows);
     } catch(error){
-        // Que error puede haber?
+        response.status(500).send("Unknown server error.");
     }
 }
 
-const getGameByName = async (request, response) => {
-    let gameName = request.params.game_name;
-
+const getGameById = async (request, response) => {
+    let game_id = request.params.game_id;
     try{
-        result =  await pool.query(`SELECT * FROM games WHERE game_name='${gameName}'`);
+        result =  await pool.query(`SELECT * FROM games WHERE id=${game_id}`);
         if(result.rows.length == 0){
-            response.status(404).send(`game ${gameName} doesn't exists`);
+            response.status(404).send(`Game with ID ${game_id} doesn't exists`);
             return;
         }
         response.status(200).send(result.rows[0]);
     } catch(error){
-        // que error puede haber?
+        response.status(500).send("Unknown server error.");
     }
 }
 
@@ -43,7 +42,11 @@ const createGameWithCategories = async (request, response) => {
         let insertGameQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES('${game.game_name}', '${currentDate}', '${currentDate}')`;
         const result = await pool.query(insertGameQuery);
     } catch(error){
-        response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
+        if(error.code == 23505){
+            response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
+        } else{
+            response.status(500).send("Unknown server error");
+        }
         return;
     }
 
@@ -54,14 +57,14 @@ const createGameWithCategories = async (request, response) => {
             let insertCategoryQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES(${game_id}, '${category}', '${currentDate}', '${currentDate}')`;
             await pool.query(insertCategoryQuery);
         }
-        response.status(201).send("Game and categories created succesfully.");
+        response.status(204).send();
     } catch(error){
-        response.status(400).send("Error!");
+        response.status(500).send({"error": "Unknown server error.", "code": 500});
     }
 }
 
 const updateGame = async (request, response) => {
-    let oldGameName = request.params.game_name;
+    let game_id = request.params.game_id;
 
     if(!request.body.game_name){
         response.status(400).send("'game_name' field is required.");
@@ -72,38 +75,41 @@ const updateGame = async (request, response) => {
     currentDate = dateTime.create().format('Y-m-d H:M:S');
 
     try{
-        let updateQuery = `UPDATE games SET game_name='${game.game_name}', updated_at='${currentDate}' WHERE game_name='${oldGameName}'`;
+        let updateQuery = `UPDATE games SET game_name='${game.game_name}', updated_at='${currentDate}' WHERE id=${game_id}`;
         let result = await pool.query(updateQuery);
         if(result.rowCount == 0){
-            response.status(404).send(`game ${oldGameName} doesn't exists`);
+            response.status(404).send(`Game with ID ${game_id} doesn't exists`);
             return;
         }
-        response.status(200).send("Game updated succesfully."); // como hago para devolver el juego insertado? mas que nada para mostrar el ID.
+        response.status(200).send(`Game with ID ${game_id} updated succesfully.`); // como hago para devolver el juego insertado? mas que nada para mostrar el ID.
     } catch(error){
-        response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
+        if(error.code == 23505){
+            response.status(400).send("Error! Game already exists. Please use another name"); // qué codigo de error debería usar?
+        } else{
+            response.status(500).send("Unknown server error.");
+        }
     }
 }
 
 const deleteGame = async (request, response) => {
-    let gameName = request.params.game_name;
-    let deleteQuery = `DELETE FROM games WHERE game_name='${gameName}'`;
+    let game_id = request.params.game_id;
+    let deleteQuery = `DELETE FROM games WHERE id=${game_id}`;
 
     try{
         let result = await pool.query(deleteQuery);
         if(result.rowCount == 0){
-            response.status(404).send(`game ${gameName} doesn't exists`);
+            response.status(404).send(`Game with ID ${game_id} doesn't exists, nothing to delete`);
             return;
         }
-        response.status(200).send("Game deleted succesfully."); // como hago para devolver el juego insertado? mas que nada para mostrar el ID
-
+        response.status(200).send(`Game with ID ${game_id} deleted succesfully.`); // como hago para devolver el juego insertado? mas que nada para mostrar el ID
     } catch(error){
-        // puede haber algun error?
+        response.status(500).send("Unknown server error.");
     }
 }
 
 module.exports = {
     getGames,
-    getGameByName,
+    getGameById,
     createGameWithCategories,
     updateGame,
     deleteGame

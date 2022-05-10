@@ -7,7 +7,7 @@ const getVideos = async (request, response) => {
         let result = await pool.query("SELECT * FROM speedrun_videos");
         response.status(200).send(result.rows);
     } catch(error){
-        // error?
+        response.status(500).send("Unknown server error.");
     }
 }
 
@@ -48,50 +48,16 @@ const createVideo = async (request, response) => {
     try{
         let insertVideoQuery = `INSERT INTO speedrun_videos(user_id, game_id, category_id, link_video, completion_time_seconds, created_at, updated_at) VALUES(${video.user_id}, ${video.game_id}, ${video.category_id}, '${video.link}', '${video.time}', '${currentDate}', '${currentDate}')`;
         await pool.query(insertVideoQuery);
-        response.status(200).send("Video created succesfully");
+        response.status(200).send();
     } catch(error){
-        response.status(404).send("Error, please check that the user_id, the game_id and the category_id for that game already exists.");
+        response.status(400).send({"Error": "Error, please check that the user_id, the game_id and the category_id for that game already exists."});
     }
 }
-/*
-async function getUserId(username){
-    try{
-        let getUserIdQuery = `SELECT id FROM users WHERE name='${username}'`;
-        let resultUserId = await pool.query(getUserIdQuery);
-        let user_id = resultUserId.rows[0].id;
-        return user_id;
-    } catch(error){
-        return false;
-    }
-}
-
-async function getGameId(gameName){
-    try{
-        let getGameIdQuery = `SELECT id FROM games WHERE game_name='${gameName}'`;
-        let resultGameId = await pool.query(getGameIdQuery);
-        let game_id = resultGameId.rows[0].id;
-        return game_id;
-    } catch(error){
-        return false;
-    }
-}
-
-async function getCategoryId(game_id, categoryName){
-    try{
-        let getCategoryIdQuery = `SELECT id FROM categories WHERE game_id=${game_id} AND category_name='${categoryName}'`;
-        let resultCategoryId = await pool.query(getCategoryIdQuery);
-        let category_id = resultCategoryId.rows[0].id;
-        return category_id;
-    } catch(error){
-        return false;
-    }
-}
-*/
 
 const updateVideo = async (request, response) => {
-    const video = request.body;
+    let video_id = request.params.video_id;
+    // TRATAR DE CONSTRUIR EL STRING QUERY A MANO ASI ME AHORRO ESTA CONSULTA.
     try{
-        let video_id = request.params.video_id;
         let videoResult = await pool.query(`SELECT * FROM speedrun_videos WHERE id=${video_id}`);
         if(videoResult.rowCount == 0){
             response.status(404).send(`Video with ID ${video_id} doesn't exists`);
@@ -102,11 +68,40 @@ const updateVideo = async (request, response) => {
         response.status(400).send("Please enter a valid video id");
     }
 
-    // SEGUIR: VER QUE CAMPOS COMPLETO EL USUARIO, Y REEMPLAZAR EN storedVideo LOS CAMPOS NO NULOS, Y DESPUÉS GUARDAR ESO.
+    const video = request.body;
+    if(video.user_id) {storedVideo.user_id = video.user_id;}
+    if(video.game_id) {storedVideo.game_id = video.game_id;}
+    if(video.category_id) {storedVideo.category_id = video.category_id;}
+    if(video.link) {storedVideo.link_video = video.link;}
+    if(video.time) {storedVideo.completion_time_seconds = video.time;}
+
+    currentDate = dateTime.create().format('Y-m-d H:M:S');
+    try{
+        let updateQuery = `UPDATE speedrun_videos SET user_id=${storedVideo.user_id}, game_id=${storedVideo.game_id}, category_id=${storedVideo.category_id}, link_video='${storedVideo.link_video}', completion_time_seconds='${storedVideo.completion_time_seconds}', updated_at='${currentDate}' WHERE id=${video_id}`;
+        let result = await pool.query(updateQuery);
+        if(result.rowCount == 0){
+            response.status(404).send(`Video with ID ${video_id} doesn't exists`);
+            return;
+        }
+        response.status(200).send(`Video with ID ${video_id} updated succesfully.`);
+    } catch(error){
+        response.status(404).send("Error, please check that the user_id, the game_id and the category_id for that game already exists.");
+    }
 }
 
 const deleteVideo = async (request, response) => {
-    
+    let video_id = request.params.video_id;
+    try{
+        let deleteQuery = `DELETE FROM speedrun_videos WHERE id=${video_id}`;
+        let result = await pool.query(deleteQuery);
+        if(result.rowCount == 0){
+            response.status(404).send(`Video with ID ${video_id} doesn't exists, nothing to delete`);
+            return;
+        }
+        response.status(200).send(`Video with ID ${video_id} deleted succesfully.`); // como hago para devolver el juego insertado? mas que nada para mostrar el ID
+    } catch(error){
+        // puede haber algun error?
+    }
 }
 
 module.exports = {
