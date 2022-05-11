@@ -1,106 +1,133 @@
 const pool = require('../databaseConnection.js');
-const dateTime = require('node-datetime');
-
+const errorCodes = require('../errorCodes.js')
 
 const getVideos = async (request, response) => {
     try{
         let result = await pool.query("SELECT * FROM speedrun_videos");
-        response.status(200).send(result.rows);
+        response.status(200).json(result.rows);
     } catch(error){
-        response.status(500).send("Unknown server error.");
+        response.status(500).json({"error": "Unknown server error.", "code": 500});
     }
 }
 
 const getVideoById = async (request, response) => {
+    let video_id = request.params.video_id;
     try{
-        result = await pool.query("SELECT * FROM speedrun_videos WHERE id="+request.params.id);
-        response.status(200).send(result.rows);
+        result = await pool.query(`SELECT * FROM speedrun_videos WHERE id='${video_id}'`);
+        response.status(200).json(result.rows);
     } catch(error){
-        response.status(400).send("Please enter a valid video id");
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const getVideosOfGame = async (request, response) => {
     try{
-        result = await pool.query("SELECT * FROM games, speedrun_videos WHERE game_name='"+ request.params.game_name +"' AND games.id=speedrun_videos.game_id");
-        response.status(200).send(result.rows);
+        let game_id = request.params.game_id;
+        let getQuery = `SELECT * FROM speedrun_videos WHERE game_id='${game_id}'`;
+        result = await pool.query(getQuery);
+        response.status(200).json(result.rows);
     } catch(error){
-        response.status(400).send("Please enter a valid game name");
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const getVideosOfGameAndCategory = async (request, response) => {
     try{
-        result = await pool.query(`SELECT speedrun_videos.id AS video_id, games.id AS game_id, categories.id AS category_id, game_name, category_name FROM games, categories, speedrun_videos WHERE games.game_name='${request.params.game_name}' AND categories.category_name='${request.params.category_name}' AND games.id=speedrun_videos.game_id AND categories.id=speedrun_videos.category_id`);
-        response.status(200).send(result.rows);
+        let game_id = request.params.game_id;
+        let category_id = request.params.category_id;
+        result = await pool.query(`SELECT * FROM speedrun_videos WHERE game_id='${game_id}' AND category_id='${category_id}'`);
+        response.status(200).json(result.rows);
     } catch(error){
-        response.status(400).send("Please enter a valid game name and category name");
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const createVideo = async (request, response) => {
     const video = request.body;
     if(!video.user_id || !video.game_id || !video.category_id || !video.link || !video.time){
-        response.status(400).send("One of the following fields is missing: 'user_name', 'game_name' ,'category_name', 'link', 'time'");
+        response.status(400).json({"error": "One of the following fields is missing: 'user_name', 'game_name' ,'category_name', 'link', 'time'", "code": 400});
+        return;
     }
+    
+    currentDate = new Date().toISOString();
+    console.log(currentDate);
 
-    currentDate = dateTime.create().format('Y-m-d H:M:S');
     try{
-        let insertVideoQuery = `INSERT INTO speedrun_videos(user_id, game_id, category_id, link_video, completion_time_seconds, created_at, updated_at) VALUES(${video.user_id}, ${video.game_id}, ${video.category_id}, '${video.link}', '${video.time}', '${currentDate}', '${currentDate}')`;
+        let insertVideoQuery = `INSERT INTO speedrun_videos(user_id, game_id, category_id, link_video, completion_time_seconds, created_at, updated_at) VALUES('${video.user_id}', '${video.game_id}', '${video.category_id}', '${video.link}', '${video.time}', '${currentDate}', '${currentDate}')`;
         await pool.query(insertVideoQuery);
-        response.status(200).send();
+        response.status(204).json();
     } catch(error){
-        response.status(400).send({"Error": "Error, please check that the user_id, the game_id and the category_id for that game already exists."});
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error, check the syntax of the fields: id's and time must be numbers and link a string", "code": 400});
+        } else if(errorCodes.missingKey(error)){
+            response.status(400).json({"error": "Error, check that the user_id, the game_id and the category_id for that game exists.", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const updateVideo = async (request, response) => {
     let video_id = request.params.video_id;
-    // TRATAR DE CONSTRUIR EL STRING QUERY A MANO ASI ME AHORRO ESTA CONSULTA.
-    try{
-        let videoResult = await pool.query(`SELECT * FROM speedrun_videos WHERE id=${video_id}`);
-        if(videoResult.rowCount == 0){
-            response.status(404).send(`Video with ID ${video_id} doesn't exists`);
-            return;
-        }
-        var storedVideo = videoResult.rows[0];
-    } catch(error){
-        response.status(400).send("Please enter a valid video id");
-    }
-
     const video = request.body;
-    if(video.user_id) {storedVideo.user_id = video.user_id;}
-    if(video.game_id) {storedVideo.game_id = video.game_id;}
-    if(video.category_id) {storedVideo.category_id = video.category_id;}
-    if(video.link) {storedVideo.link_video = video.link;}
-    if(video.time) {storedVideo.completion_time_seconds = video.time;}
+    currentDate = new Date().toISOString();
 
-    currentDate = dateTime.create().format('Y-m-d H:M:S');
+    let updateQuery = "UPDATE speedrun_videos SET ";
+
+    if(video.user_id) {updateQuery += `user_id='${video.user_id}', `}
+    if(video.game_id) {updateQuery += `game_id='${video.game_id}', `}
+    if(video.category_id) {updateQuery += `category_id='${video.category_id}', `}
+    if(video.link) {updateQuery += `link_video='${video.link}', `}
+    if(video.time) {updateQuery += `completion_time_seconds='${video.time}', `}
+
+    updateQuery += `updated_at='${currentDate}' WHERE id='${video_id}'`;
+
     try{
-        let updateQuery = `UPDATE speedrun_videos SET user_id=${storedVideo.user_id}, game_id=${storedVideo.game_id}, category_id=${storedVideo.category_id}, link_video='${storedVideo.link_video}', completion_time_seconds='${storedVideo.completion_time_seconds}', updated_at='${currentDate}' WHERE id=${video_id}`;
         let result = await pool.query(updateQuery);
         if(result.rowCount == 0){
-            response.status(404).send(`Video with ID ${video_id} doesn't exists`);
+            response.status(404).json({"error": `Video with ID ${video_id} doesn't exists`, "code": 404});
             return;
         }
-        response.status(200).send(`Video with ID ${video_id} updated succesfully.`);
+        response.status(204).json();
     } catch(error){
-        response.status(404).send("Error, please check that the user_id, the game_id and the category_id for that game already exists.");
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else if(errorCodes.missingKey(error)){
+            response.status(400).json({"error": "error, check that the user_id, the game_id and the category_id for that game exists.", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const deleteVideo = async (request, response) => {
     let video_id = request.params.video_id;
     try{
-        let deleteQuery = `DELETE FROM speedrun_videos WHERE id=${video_id}`;
+        let deleteQuery = `DELETE FROM speedrun_videos WHERE id='${video_id}'`;
         let result = await pool.query(deleteQuery);
         if(result.rowCount == 0){
-            response.status(404).send(`Video with ID ${video_id} doesn't exists, nothing to delete`);
+            response.status(404).json({"error": `Video with ID ${video_id} doesn't exists, nothing to delete`, "code": 404});
             return;
         }
-        response.status(200).send(`Video with ID ${video_id} deleted succesfully.`); // como hago para devolver el juego insertado? mas que nada para mostrar el ID
+        response.status(204).json();
     } catch(error){
-        // puede haber algun error?
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 

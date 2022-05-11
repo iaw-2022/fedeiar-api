@@ -39,10 +39,10 @@ router.put('/games/:game_id/categories', category.updateCategories);
 // ---------------------------------------------- VIDEOS ----------------------------------------------
 
 router.get('/videos', video.getVideos);
-router.get('/videos/:id', video.getVideoById);
+router.get('/videos/:video_id', video.getVideoById);
 // los siguientes 2 son de videos o de juegos?
-router.get('/games/:game_name/videos', video.getVideosOfGame);
-router.get('/games/:game_name/:category_name/videos', video.getVideosOfGameAndCategory);
+router.get('/games/:game_id/videos', video.getVideosOfGame);
+router.get('/games/:game_id/:category_id/videos', video.getVideosOfGameAndCategory);
 router.post('/videos', video.createVideo);
 router.put('/videos/:video_id', video.updateVideo);
 router.delete('/videos/:video_id', video.deleteVideo);
