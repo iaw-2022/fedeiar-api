@@ -1,5 +1,6 @@
 const pool = require('../databaseConnection.js');
 const codeErrors = require('../errorCodes');
+const escape = require('pg-escape');
 
 const getGames = async (request, response) => {
     try{
@@ -11,12 +12,12 @@ const getGames = async (request, response) => {
 }
 
 const getGameById = async (request, response) => {
-    let game_id = request.params.game_id;
+    let game_id = request.params.game_id.toString();
     try{
-        result = await pool.query(`SELECT * FROM games WHERE id='${game_id}'`);
+        const getQuery = `SELECT * FROM games WHERE id=${escape.literal(game_id)}`;
+        result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
-        console.log(error);
         if(codeErrors.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
         }else{
@@ -26,21 +27,26 @@ const getGameById = async (request, response) => {
 }
 
 const createGameWithCategories = async (request, response) => {
-    const game = request.body;
-    if(!game.game_name){
+    let game_name = request.body.game_name;
+    let categories = request.body.categories;
+    if(!game_name){
         response.status(400).json({"error": "'game_name' field is required.", "code": 500});
         return;
     }
-    if(!game.categories || !Array.isArray(game.categories) || game.categories.length == 0){
+    if(!categories || !Array.isArray(categories) || categories.length == 0){
         response.status(400).json({"error": "'categories' array field is required and is must not be an empty array", code: 400});
         return;
     }
-    game.categories = [...new Set(game.categories)]; // Elimina categorias duplicadas
-    
+    game_name = game_name.toString();
+    for(let i = 0; i < categories.length; i++){
+        categories[i] = categories[i].toString();
+    }
+    categories = [...new Set(categories)]; // Elimina categorias duplicadas
     currentDate = new Date().toISOString();
+
     try{
-        let insertGameQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES('${game.game_name}', '${currentDate}', '${currentDate}')`;
-        const result = await pool.query(insertGameQuery);
+        let insertGameQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES(${escape.literal(game_name)}, '${currentDate}', '${currentDate}')`;
+        await pool.query(insertGameQuery);
     } catch(error){
         if(codeErrors.duplicatedKey(error)){
             response.status(400).json({"error": "Game already exists. Please use another name", "code": 400});
@@ -49,12 +55,11 @@ const createGameWithCategories = async (request, response) => {
         }
         return;
     }
-
     try{
-        let resultGame = await pool.query(`SELECT * FROM games WHERE game_name='${game.game_name}'`);
-        let game_id = resultGame.rows[0].id;
-        for(let category of game.categories){
-            let insertCategoryQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES('${game_id}', '${category}', '${currentDate}', '${currentDate}')`;
+        let resultGame = await pool.query(`SELECT * FROM games WHERE game_name=${escape.literal(game_name)}`);
+        let game_id = resultGame.rows[0].id.toString();
+        for(let categoryName of categories){
+            let insertCategoryQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES(${escape.literal(game_id)}, ${escape.literal(categoryName)}, '${currentDate}', '${currentDate}')`;
             await pool.query(insertCategoryQuery);
         }
         response.status(204).json();
@@ -64,18 +69,17 @@ const createGameWithCategories = async (request, response) => {
 }
 
 const updateGame = async (request, response) => {
-    let game_id = request.params.game_id;
-
-    if(!request.body.game_name){
+    let game_id = request.params.game_id.toString();
+    let game_name = request.body.game_name;
+    if(!game_name){
         response.status(400).json({"error": "'game_id' field is required.", "code": 400});
         return;
     }
-
-    const game = request.body;
+    game_name = game_name.toString();
     currentDate = new Date().toISOString();
 
     try{
-        let updateQuery = `UPDATE games SET game_name='${game.game_name}', updated_at='${currentDate}' WHERE id='${game_id}'`;
+        let updateQuery = `UPDATE games SET game_name=${escape.literal(game_name)}, updated_at='${currentDate}' WHERE id=${escape.literal(game_id)}`;
         let result = await pool.query(updateQuery);
         if(result.rowCount == 0){
             response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404});
@@ -94,8 +98,8 @@ const updateGame = async (request, response) => {
 }
 
 const deleteGame = async (request, response) => {
-    let game_id = request.params.game_id;
-    let deleteQuery = `DELETE FROM games WHERE id='${game_id}'`;
+    let game_id = request.params.game_id.toString();
+    let deleteQuery = `DELETE FROM games WHERE id=${escape.literal(game_id)}`;
 
     try{
         let result = await pool.query(deleteQuery);

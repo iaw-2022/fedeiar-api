@@ -1,5 +1,6 @@
 const pool = require('../databaseConnection.js');
 const errorCodes = require('../errorCodes.js');
+const escape = require('pg-escape');
 
 const getUsers = async (request, response) => {
     try{
@@ -12,9 +13,9 @@ const getUsers = async (request, response) => {
 
 
 const getUserById = async (request, response) => {
-    let user_id = request.params.user_id;
+    let user_id = request.params.user_id.toString();
     try{
-        result = await pool.query(`SELECT id, name, email, nationality, role, created_at, updated_at FROM users WHERE id='${user_id}'`);
+        result = await pool.query(`SELECT id, name, email, nationality, role, created_at, updated_at FROM users WHERE id=${escape.literal(user_id)}`);
         response.status(200).json(result.rows);
     } catch(error){
         if(errorCodes.invalidType(error)){

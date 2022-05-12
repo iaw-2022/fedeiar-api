@@ -1,10 +1,11 @@
 const pool = require('../databaseConnection.js');
 const errorCodes = require('../errorCodes.js');
+const escape = require('pg-escape');
 
 const getCategories = async (request, response) => {
-    let game_id = request.params.game_id;
+    let game_id = request.params.game_id.toString();
     try{
-        let getQuery = `SELECT * FROM categories WHERE game_id='${game_id}'`;
+        let getQuery = `SELECT * FROM categories WHERE game_id=${escape.literal(game_id)}`;
         const result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
@@ -13,8 +14,8 @@ const getCategories = async (request, response) => {
 }
 
 const addCategoryToGame = async(request, response) => {
-    let game_id = request.params.game_id;
-    let categoryName = request.body.category;
+    let game_id = request.params.game_id.toString();
+    let categoryName = request.body.category.toString();
     if(!categoryName){
         response.status(400).json({"error": "'category' field is required", "code": 400});
         return;
@@ -22,7 +23,7 @@ const addCategoryToGame = async(request, response) => {
 
     currentDate = new Date().toISOString();
     try{
-        let insertQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES ('${game_id}', '${categoryName}', '${currentDate}', '${currentDate}')`;
+        let insertQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES (${escape.literal(game_id)}, ${escape.literal(categoryName)}, '${currentDate}', '${currentDate}')`;
         let result = await pool.query(insertQuery);
         response.status(204).json();
     } catch(error){
@@ -39,16 +40,19 @@ const addCategoryToGame = async(request, response) => {
 }
 
 const updateCategories = async (request, response) => {
-    let game_id = request.params.game_id;
+    let game_id = request.params.game_id.toString();
     let newCategories = request.body.categories;
     if(!newCategories || !Array.isArray(newCategories) || newCategories.length == 0){
         response.status(400).json({"error": "'categories' array field is required and is must not be an empty array", "code": 400});
         return;
     }
+    for(let i = 0; i < newCategories.length; i++){
+        newCategories[i] = newCategories[i].toString();
+    }
     newCategories = [...new Set(newCategories)]; // Elimina categorias duplicadas
 
     try{
-        let oldCategoriesQuery = `SELECT id FROM categories WHERE game_id='${game_id}'`;
+        let oldCategoriesQuery = `SELECT id FROM categories WHERE game_id=${escape.literal(game_id)}`;
         let oldCategoriesResult = await pool.query(oldCategoriesQuery);
         if(oldCategoriesResult.rowCount == 0){
             response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404});
@@ -69,7 +73,7 @@ const updateCategories = async (request, response) => {
     currentDate = new Date().toISOString();
     try{
         for(categoryName of newCategories){
-            let categoryInsertQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES ('${game_id}', '${categoryName}', '${currentDate}', '${currentDate}')`
+            let categoryInsertQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES (${escape.literal(game_id)}, ${escape.literal(categoryName)}, '${currentDate}', '${currentDate}')`
             await pool.query(categoryInsertQuery);
         }
         response.status(204).json();
