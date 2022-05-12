@@ -7,7 +7,8 @@ const getGames = async (request, response) => {
         let result = await pool.query("SELECT * FROM games");
         response.status(200).json(result.rows);
     } catch(error){
-        response.status(500).json({"error": "Unknown server error.", "code": 500});
+        response.status(500).json({"error": JSON.stringify(error), "code": 500});
+        //response.status(500).json({"error": "Unknown server error.", "code": 500});
     }
 }
 
@@ -99,9 +100,8 @@ const updateGame = async (request, response) => {
 
 const deleteGame = async (request, response) => {
     let game_id = request.params.game_id.toString();
-    let deleteQuery = `DELETE FROM games WHERE id=${escape.literal(game_id)}`;
-
     try{
+        let deleteQuery = `DELETE FROM games WHERE id=${escape.literal(game_id)}`;
         let result = await pool.query(deleteQuery);
         if(result.rowCount == 0){
             response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404})

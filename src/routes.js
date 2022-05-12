@@ -1,15 +1,15 @@
-const pool = require('./databaseConnection.js')
 const { Router } = require('express');
 const router = Router();
-const bodyParser = require("body-parser");
-const dateTime = require('node-datetime');
-
-router.use(bodyParser.json());
+const { swaggerUI, swaggerDocs } = require('./swagger.js');
 
 const user = require('./controllers/userController.js');
 const game = require('./controllers/gameController.js');
 const category = require('./controllers/categoryController.js');
 const video = require('./controllers/videoController.js');
+
+// ---------------------------------------------- SWAGGER DOCUMENTATION ----------------------------------------------
+
+router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- INDEX  ----------------------------------------------
 
@@ -19,7 +19,18 @@ router.get('/', (request, response) => {
 
 // ---------------------------------------------- USERS ----------------------------------------------
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     description: Get all users
+ *     responses:
+ *       200:
+ *         description: Success
+ * 
+ */
 router.get('/users', user.getUsers);
+
 router.get('/users/:user_id', user.getUserById);
 
 // ---------------------------------------------- GAMES ----------------------------------------------
@@ -48,6 +59,6 @@ router.put('/videos/:video_id', video.updateVideo);
 router.delete('/videos/:video_id', video.deleteVideo);
 
 
-// EXPORTAR
+// EXPORT
 
 module.exports = router;

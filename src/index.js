@@ -3,12 +3,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 
-
 dotenv.config();
 app.use(bodyParser.json());
 
 
-// ROUTES
+// ---------------------------------------------- ROUTES ----------------------------------------------
 
 app.use(require('./routes.js'))
 
