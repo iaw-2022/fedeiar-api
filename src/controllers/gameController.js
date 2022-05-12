@@ -7,8 +7,7 @@ const getGames = async (request, response) => {
         let result = await pool.query("SELECT * FROM games");
         response.status(200).json(result.rows);
     } catch(error){
-        response.status(500).json({"error": JSON.stringify(error), "code": 500});
-        //response.status(500).json({"error": "Unknown server error.", "code": 500});
+        response.status(500).json({"error": "Unknown server error.", "code": 500});
     }
 }
 
@@ -17,7 +16,11 @@ const getGameById = async (request, response) => {
     try{
         const getQuery = `SELECT * FROM games WHERE id=${escape.literal(game_id)}`;
         result = await pool.query(getQuery);
-        response.status(200).json(result.rows);
+        if(result.rowCount == 0){
+            response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404});
+            return;
+        }
+        response.status(200).json(result.rows[0]);
     } catch(error){
         if(codeErrors.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
