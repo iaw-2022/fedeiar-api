@@ -15,7 +15,7 @@ const getGameById = async (request, response) => {
     let game_id = request.params.game_id.toString();
     try{
         const getQuery = `SELECT * FROM games WHERE id=${escape.literal(game_id)}`;
-        result = await pool.query(getQuery);
+        let result = await pool.query(getQuery);
         if(result.rowCount == 0){
             response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404});
             return;

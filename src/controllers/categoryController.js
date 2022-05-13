@@ -7,6 +7,10 @@ const getCategories = async (request, response) => {
     try{
         let getQuery = `SELECT * FROM categories WHERE game_id=${escape.literal(game_id)}`;
         const result = await pool.query(getQuery);
+        if(result.rowCount == 0){
+            response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404});
+            return;
+        }
         response.status(200).json(result.rows);
     } catch(error){
         response.status(500).json({"error": "Unknown server error.", "code": 500});
@@ -24,7 +28,7 @@ const addCategoryToGame = async(request, response) => {
     currentDate = new Date().toISOString();
     try{
         let insertQuery = `INSERT INTO categories(game_id, category_name, created_at, updated_at) VALUES (${escape.literal(game_id)}, ${escape.literal(categoryName)}, '${currentDate}', '${currentDate}')`;
-        let result = await pool.query(insertQuery);
+        await pool.query(insertQuery);
         response.status(204).json();
     } catch(error){
         if(errorCodes.invalidType(error)){

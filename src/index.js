@@ -6,10 +6,18 @@ const bodyParser = require("body-parser");
 dotenv.config();
 app.use(bodyParser.json());
 
+// ---------------------------------------------- INDEX  ----------------------------------------------
+
+app.get('/', (request, response) => {
+    response.send("Welcome to the API!");
+});
 
 // ---------------------------------------------- ROUTES ----------------------------------------------
 
-app.use(require('./routes.js'))
+app.use(require('./routes/userRoutes.js'));
+app.use(require('./routes/gameRoutes.js'));
+app.use(require('./routes/categoryRoutes.js'));
+app.use(require('./routes/videoRoutes.js'));
 
 // ---------------------------------------------- SERVER ----------------------------------------------
 

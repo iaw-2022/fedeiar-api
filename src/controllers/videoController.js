@@ -14,8 +14,12 @@ const getVideos = async (request, response) => {
 const getVideoById = async (request, response) => {
     let video_id = request.params.video_id.toString();
     try{
-        result = await pool.query(`SELECT * FROM speedrun_videos WHERE id=${escape.literal(video_id)}`);
-        response.status(200).json(result.rows);
+        let result = await pool.query(`SELECT * FROM speedrun_videos WHERE id=${escape.literal(video_id)}`);
+        if(result.rowCount == 0){
+            response.status(404).json({"error": `Video with ID ${video_id} doesn't exists`, "code": 404});
+            return;
+        }
+        response.status(200).json(result.rows[0]);
     } catch(error){
         if(errorCodes.invalidType(error)){
             response.status(400).json({"error": "Error: ID must be number", "code": 400});
@@ -29,7 +33,7 @@ const getVideosOfGame = async (request, response) => {
     try{
         let game_id = request.params.game_id.toString();
         let getQuery = `SELECT * FROM speedrun_videos WHERE game_id=${escape.literal(game_id)}`;
-        result = await pool.query(getQuery);
+        let result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
         if(errorCodes.invalidType(error)){
