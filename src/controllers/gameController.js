@@ -1,5 +1,5 @@
 const pool = require('../databaseConnection.js');
-const codeErrors = require('../errorCodes');
+const errorCodes = require('../errorCodes');
 const escape = require('pg-escape');
 
 const getGames = async (request, response) => {
@@ -22,7 +22,7 @@ const getGameById = async (request, response) => {
         }
         response.status(200).json(result.rows[0]);
     } catch(error){
-        if(codeErrors.invalidType(error)){
+        if(errorCodes.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
         }else{
             response.status(500).json({"error": "Unknown server error.", "code": 500});
@@ -52,7 +52,7 @@ const createGameWithCategories = async (request, response) => {
         let insertGameQuery = `INSERT INTO games(game_name, created_at, updated_at) VALUES(${escape.literal(game_name)}, '${currentDate}', '${currentDate}')`;
         await pool.query(insertGameQuery);
     } catch(error){
-        if(codeErrors.duplicatedKey(error)){
+        if(errorCodes.duplicatedKey(error)){
             response.status(400).json({"error": "Game already exists. Please use another name", "code": 400});
         } else{
             response.status(500).json({"error": "Unknown server error.", "code": 500});
@@ -91,9 +91,9 @@ const updateGame = async (request, response) => {
         }
         response.status(204).json();
     } catch(error){
-        if(codeErrors.invalidType(error)){
+        if(errorCodes.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
-        } else if(codeErrors.duplicatedKey(error)){
+        } else if(errorCodes.duplicatedKey(error)){
             response.status(400).json({"error": "Game already exists. Use another name", "code": 400}); 
         } else{
             response.status(500).json({"error": "Unknown server error.", "code": 500});
@@ -112,7 +112,7 @@ const deleteGame = async (request, response) => {
         }
         response.status(204).json();
     } catch(error){
-        if(codeErrors.invalidType(error)){
+        if(errorCodes.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
         } else{
             response.status(500).json({"error": "Unknown server error.", "code": 500});

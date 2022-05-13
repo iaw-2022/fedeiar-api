@@ -21,54 +21,89 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         - role
  *       properties:
  *         id:
- *           type: integer
- *           description: The auto-generated id of the user
+ *           type: string
+ *           description: "The auto-generated id of the user"
  *         name:
  *           type: string
- *           description: user's username
+ *           description: "user's username"
  *         email:
- *           email: string
- *           description: user's email
- *          nationality:
- *            type: string
- *            description: user's nationality
- *          role:
- *            type: string
- *            description: user's permission role
+ *           type: string
+ *           description: "user's email"
+ *         nationality:
+ *           type: string
+ *           description: "user's nationality"
+ *         role:
+ *           type: string
+ *           description: "user's permission role"
+ *         created_at:
+ *           type: string
+ *           description: "user's auto-generated creation date"
+ *         updated_at:
+ *           type: string
+ *           description: "user's auto-generated last update date"
  *       example:
- *         id: d5fE_asz
- *         title: The New Turing Omnibus
- *         author: Alexander K. Dewdney
+ *         id: "1"
+ *         name: "bousher"
+ *         email: "a_mail@mail.com"
+ *         nationality: "Argentina"
+ *         role: "administrator"
+ *         created_at: "2022-05-12 03:53:45"
+ *         updated_at: "2022-05-12 03:53:45"
  */
-
- /**
-  * @swagger
-  * tags:
-  *   name: Users
-  *   description: API for seeing all information related to users.
-  */
 
 /**
  * @swagger
- * 
- * 
+ * tags:
+ *   name: Users
+ *   description: API for seeing all information related to users.
+ */
+
+/**
+ * @swagger
  * /users:
  *   get:
- *     tags: 
- *     - "Users"
  *     summary: "Get all users"
- *     description: ""
+ *     tags: [Users]
  *     responses:
  *       200:
- *         description: Success
- * 
+ *         description: "The list of all users"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/User'
  */
- router.get('/users', user.getUsers);
+router.get('/users', user.getUsers);
 
- router.get('/users/:user_id', user.getUserById);
+/** 
+ * @swagger
+ * /users/{user_id}:
+ *   get:
+ *     summary: "Get user by id"
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The user id"
+ *     responses:
+ *       200:
+ *         description: "The user description by id"
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 $ref: '#components/schemas/User'
+ *       404:
+ *         description: "User not found"
+ *       400:
+ *         description: "Invalid id type"
+*/
+
+router.get('/users/:user_id', user.getUserById);
 
 
 
- // EXPORT
+// EXPORT
 
- module.exports = router;
+module.exports = router;
