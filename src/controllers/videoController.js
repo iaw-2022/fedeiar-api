@@ -63,7 +63,7 @@ const getVideosOfGameAndCategory = async (request, response) => {
 const createVideo = async (request, response) => {
     const video = request.body;
     if(!video.user_id || !video.game_id || !video.category_id || !video.link || !video.time){
-        response.status(400).json({"error": "One of the following fields is missing: 'user_name', 'game_name' ,'category_name', 'link', 'time'", "code": 400});
+        response.status(400).json({"error": "One of the following fields is missing: 'user_id', 'game_id' ,'category_id', 'link', 'time'", "code": 400});
         return;
     }
     let user_id = video.user_id.toString(), game_id = video.game_id.toString(), category_id = video.category_id.toString(), link = video.link.toString(), time = video.time.toString();

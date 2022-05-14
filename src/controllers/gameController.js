@@ -76,7 +76,7 @@ const updateGame = async (request, response) => {
     let game_id = request.params.game_id.toString();
     let game_name = request.body.game_name;
     if(!game_name){
-        response.status(400).json({"error": "'game_id' field is required.", "code": 400});
+        response.status(400).json({"error": "'game_name' field is required.", "code": 400});
         return;
     }
     game_name = game_name.toString();

@@ -8,6 +8,8 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- GAMES ROUTES ----------------------------------------------
 
+// -------------------------------------------- SWAGGER GAME SCHEMAS --------------------------------------------
+
 /**
  * @swagger
  * components:
@@ -30,10 +32,42 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           type: string
  *           description: "Game's auto-generated last update date"
  *       example:
- *         id: "1"
- *         name: "Klonoa"
- *         created_at: "2022-05-12 03:53:45"
- *         updated_at: "2022-05-12 03:53:45"
+ *           id: "1"
+ *           game_name: "Klonoa"
+ *           created_at: "2022-05-12 03:53:45"
+ *           updated_at: "2022-05-12 03:53:45"
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     GameArray:
+ *       type: object
+ *       required:
+ *         - game_name
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: "The auto-generated id of the game"
+ *         game_name:
+ *           type: string
+ *           description: "Name of the game"
+ *         created_at:
+ *           type: string
+ *           description: "Game's auto-generated creation date"
+ *         updated_at:
+ *           type: string
+ *           description: "Game's auto-generated last update date"
+ *       example:
+ *           - id: "1"
+ *             game_name: "Klonoa"
+ *             created_at: "2022-05-12 03:53:45"
+ *             updated_at: "2022-05-12 03:53:45"
+ *           - id: "2"
+ *             game_name: "Dark Cloud"
+ *             created_at: "2022-05-12 03:53:45"
+ *             updated_at: "2022-05-12 03:53:45"
  */
 
 /**
@@ -42,6 +76,8 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *   name: Games
  *   description: The games managing API.
  */
+
+// -------------------------------------------- SWAGGER GAME ROUTES --------------------------------------------
 
 /**
  * @swagger
@@ -55,26 +91,26 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         content:
  *           application/json:
  *             schema:
- *                 $ref: '#components/schemas/Game'
+ *                 $ref: '#components/schemas/GameArray'
  */
 router.get('/games', game.getGames);
 
 /** 
  * @swagger
- * /game/{game_id}:
+ * /games/{game_id}:
  *   get:
  *     summary: "Get game by id"
  *     tags: [Games]
  *     parameters:
  *       - in: path
- *         name: user_id
+ *         name: game_id
  *         schema:
  *           type: string
  *         required: true
- *         description: "The user id"
+ *         description: "The game id"
  *     responses:
  *       200:
- *         description: "The user description by id"
+ *         description: "The game description by id"
  *         content:
  *           application/json:
  *             schema:
@@ -82,7 +118,9 @@ router.get('/games', game.getGames);
  *       404:
  *         description: "Game not found"
  *       400:
- *         description: "Invalid id type"
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
 */
 router.get('/games/:game_id', game.getGameById);
 
@@ -99,15 +137,12 @@ router.get('/games/:game_id', game.getGameById);
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - game_name
- *               - categories
  *             properties:
  *               game_name:
  *                 type: string
  *                 description: "Name of the game"
  *               categories:
- *                 type: list
+ *                 type: arrayOfString
  *                 description: "An array with all categories attached with the game"
  *             example:
  *               game_name: "Musashi"
@@ -116,14 +151,72 @@ router.get('/games/:game_id', game.getGameById);
  *       204:
  *         description: "Game successfully created"
  *       400:
- *         description: "Bad syntax or Game already exists"
+ *         description: "Invalid ID, invalid JSON or game name already exists"
+ *       500:
+ *         description: "Server error"
 */
 router.post('/games', game.createGameWithCategories);
 
-//CONTINUAR ACA CON EL SWAGGER PUT
+/**
+ * @swagger
+ * /games/{game_id}:
+ *  put:
+ *    summary: "Update the game's name of an existing game, by id"
+ *    tags: [Games]
+ *    parameters:
+ *      - in: path
+ *        name: game_id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The game id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *             type: object
+ *             properties:
+ *               game_name:
+ *                 type: string
+ *                 description: "Name of the game"
+ *             example:
+ *               game_name: "updated_game_name"
+ *    responses:
+ *      204:
+ *        description: "Game's name updated successfully"
+ *      400:
+ *        description: "Invalid ID, invalid JSON or game name already exists"
+ *      404:
+ *        description: "Game not found"
+ *      500:
+ *        description: "Server error"
+ */
 router.put('/games/:game_id', game.updateGame);
 
-
+/** 
+ * @swagger
+ * /games/{game_id}:
+ *   delete:
+ *     summary: "Remove game by id"
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: game_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The game id"
+ *     responses:
+ *       204:
+ *         description: "Game removed successfully"
+ *       404:
+ *         description: "Game not found"
+ *       400:
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
+*/
 router.delete('/games/:game_id', game.deleteGame);
 
 

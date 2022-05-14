@@ -8,6 +8,8 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- USERS ROUTES ----------------------------------------------
 
+// -------------------------------------------- SWAGGER USER SCHEMAS --------------------------------------------
+
 /**
  * @swagger
  * components:
@@ -53,10 +55,62 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     UserArray:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - nationality
+ *         - role
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: "The auto-generated id of the user"
+ *         name:
+ *           type: string
+ *           description: "user's username"
+ *         email:
+ *           type: string
+ *           description: "user's email"
+ *         nationality:
+ *           type: string
+ *           description: "user's nationality"
+ *         role:
+ *           type: string
+ *           description: "user's permission role"
+ *         created_at:
+ *           type: string
+ *           description: "user's auto-generated creation date"
+ *         updated_at:
+ *           type: string
+ *           description: "user's auto-generated last update date"
+ *       example:
+ *         - id: "1"
+ *           name: "bousher"
+ *           email: "a_mail@mail.com"
+ *           nationality: "Argentina"
+ *           role: "administrator"
+ *           created_at: "2022-05-12 03:53:45"
+ *           updated_at: "2022-05-12 03:53:45"
+ *         - id: "2"
+ *           name: "juan"
+ *           email: "a_mail2@mail.com"
+ *           nationality: "Argentina"
+ *           role: "administrator"
+ *           created_at: "2022-05-12 03:53:45"
+ *           updated_at: "2022-05-12 03:53:45"
+ */
+
+/**
+ * @swagger
  * tags:
  *   name: Users
  *   description: API for seeing all information related to users.
  */
+
+// -------------------------------------------- SWAGGER USER ROUTES --------------------------------------------
 
 /**
  * @swagger
@@ -70,7 +124,9 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#components/schemas/User'
+ *               $ref: '#components/schemas/UserArray'
+ *       500:
+ *         description: "Server error"
  */
 router.get('/users', user.getUsers);
 
@@ -97,9 +153,10 @@ router.get('/users', user.getUsers);
  *       404:
  *         description: "User not found"
  *       400:
- *         description: "Invalid id type"
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
 */
-
 router.get('/users/:user_id', user.getUserById);
 
 

@@ -13,17 +13,22 @@ const getCategories = async (request, response) => {
         }
         response.status(200).json(result.rows);
     } catch(error){
-        response.status(500).json({"error": "Unknown server error.", "code": 500});
+        if(errorCodes.invalidType(error)){
+            response.status(400).json({"error": "Error: ID must be number", "code": 400});
+        } else{
+            response.status(500).json({"error": "Unknown server error.", "code": 500});
+        }
     }
 }
 
 const addCategoryToGame = async(request, response) => {
     let game_id = request.params.game_id.toString();
-    let categoryName = request.body.category.toString();
+    let categoryName = request.body.category_name;
     if(!categoryName){
-        response.status(400).json({"error": "'category' field is required", "code": 400});
+        response.status(400).json({"error": "'category_name' field is required", "code": 400});
         return;
     }
+    categoryName = categoryName.toString();
 
     currentDate = new Date().toISOString();
     try{
@@ -34,7 +39,7 @@ const addCategoryToGame = async(request, response) => {
         if(errorCodes.invalidType(error)){
             response.status(400).json({"error": `Error: ID must be number`, "code": 400});
         } else if(errorCodes.missingKey(error)){
-            response.status(400).json({"error": "check that the game_id exists", "code": 400})
+            response.status(404).json({"error": `Game with ID ${game_id} doesn't exists`, "code": 404})
         } else if(errorCodes.duplicatedKey(error)){
             response.status(400).json({"error": "Category already exists for that game", "code": 400});
         } else{
