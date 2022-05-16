@@ -1,10 +1,12 @@
 const dotenv = require('dotenv');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const bodyParser = require("body-parser");
 
 dotenv.config();
 app.use(bodyParser.json());
+app.use(cors());
 
 // ---------------------------------------------- INDEX  ----------------------------------------------
 
