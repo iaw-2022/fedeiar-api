@@ -38,37 +38,7 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           updated_at: "2022-05-12 03:53:45"
  */
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     GameArray:
- *       type: object
- *       required:
- *         - game_name
- *       properties:
- *         id:
- *           type: string
- *           description: "The auto-generated id of the game"
- *         game_name:
- *           type: string
- *           description: "Name of the game"
- *         created_at:
- *           type: string
- *           description: "Game's auto-generated creation date"
- *         updated_at:
- *           type: string
- *           description: "Game's auto-generated last update date"
- *       example:
- *           - id: "1"
- *             game_name: "Klonoa"
- *             created_at: "2022-05-12 03:53:45"
- *             updated_at: "2022-05-12 03:53:45"
- *           - id: "2"
- *             game_name: "Dark Cloud"
- *             created_at: "2022-05-12 03:53:45"
- *             updated_at: "2022-05-12 03:53:45"
- */
+
 
 /**
  * @swagger
@@ -91,7 +61,19 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         content:
  *           application/json:
  *             schema:
- *                 $ref: '#components/schemas/GameArray'
+ *               type: array 
+ *               items:
+ *                 $ref: '#components/schemas/Game'
+ *             example:
+ *               - id: "1"
+ *                 game_name: "Klonoa"
+ *                 created_at: "2022-05-12 03:53:45"
+ *                 updated_at: "2022-05-12 03:53:45"
+ *               - id: "2"
+ *                 game_name: "Dark Cloud"
+ *                 created_at: "2022-05-12 03:53:45"
+ *                 updated_at: "2022-05-12 03:53:45"
+ *               
  */
 router.get('/games', game.getGames);
 
@@ -142,8 +124,11 @@ router.get('/games/:game_id', game.getGameById);
  *                 type: string
  *                 description: "Name of the game"
  *               categories:
- *                 type: arrayOfString
+ *                 type: array
  *                 description: "An array with all categories attached with the game"
+ *                 items:
+ *                   type: string
+ *                   description: "Category Name"
  *             example:
  *               game_name: "Musashi"
  *               categories: ["any%", "100%"]

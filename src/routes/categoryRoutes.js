@@ -77,6 +77,8 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *                 $ref: '#components/schemas/Category'
  *       400:
  *         description: "Invalid ID"
@@ -148,8 +150,11 @@ router.post('/category/:game_id', category.addCategoryToGame);
  *             type: object
  *             properties:
  *               categories:
- *                 type: arrayOfString
+ *                 type: array
  *                 description: "An array with all the new categories to be added to the game"
+ *                 items:
+ *                   type: string
+ *                   description: "Category Name"
  *             example:
  *               categories: ["any%", "100%", "low%"]
  *     responses:
