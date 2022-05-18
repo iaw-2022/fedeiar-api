@@ -34,7 +34,7 @@ const createGameWithCategories = async (request, response) => {
     let game_name = request.body.game_name;
     let categories = request.body.categories;
     if(!game_name){
-        response.status(400).json({"message": "'game_name' field is required.", "code": 500});
+        response.status(400).json({"message": "'game_name' field is required.", "code": 400});
         return;
     }
     if(!categories || !Array.isArray(categories) || categories.length == 0){

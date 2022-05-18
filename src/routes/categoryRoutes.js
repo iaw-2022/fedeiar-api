@@ -37,16 +37,11 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           type: string
  *           description: "Category's auto-generated last update date"
  *       example:
- *         - id: "1"
- *           game_id: "1"
- *           category_name: "any%"
- *           created_at: "2022-05-12 03:53:45"
- *           updated_at: "2022-05-12 03:53:45"
- *         - id: "2"
- *           game_id: "1"
- *           category_name: "low%"
- *           created_at: "2022-05-12 03:53:45"
- *           updated_at: "2022-05-12 03:53:45"
+ *         id: "1"
+ *         game_id: "1"
+ *         category_name: "any%"
+ *         created_at: "2022-05-12 03:53:45"
+ *         updated_at: "2022-05-12 03:53:45"
  */
 
 /**
@@ -80,6 +75,17 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *               type: array
  *               items:
  *                 $ref: '#components/schemas/Category'
+ *               example:
+ *                 - id: "1"
+ *                   game_id: "1"
+ *                   category_name: "any%"
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   game_id: "1"
+ *                   category_name: "low%"
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45" 
  *       400:
  *         description: "Invalid ID"
  *       404:
@@ -151,10 +157,9 @@ router.post('/category/:game_id', category.addCategoryToGame);
  *             properties:
  *               categories:
  *                 type: array
- *                 description: "An array with all the new categories to be added to the game"
  *                 items:
  *                   type: string
- *                   description: "Category Name"
+ *                   name: "category_name"
  *             example:
  *               categories: ["any%", "100%", "low%"]
  *     responses:

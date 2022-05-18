@@ -79,26 +79,26 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         content:
  *           application/json:
  *             schema:
- *                 type: array
- *                 items:
+ *               type: array
+ *               items:
  *                   $ref: '#components/schemas/Video'
- *             example:
- *               - id: "1"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "1"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
- *               - id: "2"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "2"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
+ *               example:
+ *                 - id: "1"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "1"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "2"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
  *       500:
  *         description: "Server error"
  */
@@ -154,26 +154,26 @@ router.get('/videos/:video_id', video.getVideoById);
  *         content:
  *           application/json:
  *             schema:
- *                 type: array
- *                 items:
+ *               type: array
+ *               items:
  *                   $ref: '#components/schemas/Video'
- *             example:
- *               - id: "1"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "1"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
- *               - id: "2"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "2"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
+ *               example:
+ *                 - id: "1"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "1"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "2"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
  *       400:
  *         description: "Invalid ID"
  *       500:
@@ -207,26 +207,26 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *         content:
  *           application/json:
  *             schema:
- *                 type: array
- *                 items:
+ *               type: array
+ *               items:
  *                   $ref: '#components/schemas/Video'
- *             example:
- *               - id: "1"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "1"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
- *               - id: "2"
- *                 user_id: "1"
- *                 game_id: "1"
- *                 category_id: "2"
- *                 link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
- *                 completion_time_seconds: 420
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
+ *               example:
+ *                 - id: "1"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "1"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   user_id: "1"
+ *                   game_id: "1"
+ *                   category_id: "2"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
  *       400:
  *         description: "Invalid ID"
  *       500:

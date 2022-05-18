@@ -64,15 +64,15 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *               type: array 
  *               items:
  *                 $ref: '#components/schemas/Game'
- *             example:
- *               - id: "1"
- *                 game_name: "Klonoa"
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
- *               - id: "2"
- *                 game_name: "Dark Cloud"
- *                 created_at: "2022-05-12 03:53:45"
- *                 updated_at: "2022-05-12 03:53:45"
+ *               example:
+ *                 - id: "1"
+ *                   game_name: "Klonoa"
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   game_name: "Dark Cloud"
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
  *               
  */
 router.get('/games', game.getGames);
@@ -125,10 +125,9 @@ router.get('/games/:game_id', game.getGameById);
  *                 description: "Name of the game"
  *               categories:
  *                 type: array
- *                 description: "An array with all categories attached with the game"
  *                 items:
  *                   type: string
- *                   description: "Category Name"
+ *                   name: "category_name"
  *             example:
  *               game_name: "Musashi"
  *               categories: ["any%", "100%"]
