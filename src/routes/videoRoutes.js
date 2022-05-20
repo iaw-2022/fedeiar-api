@@ -1,6 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 const { swaggerUI, swaggerDocs } = require('../swagger.js');
+const { auth } = require('express-oauth2-jwt-bearer');
+
+const checkJwt = auth({
+    audience: 'https://speedrunVideos/api',
+    issuerBaseURL: `https://dev-w1hro3h2.us.auth0.com/`,
+});
 
 const video = require('../controllers/videoController.js');
 
@@ -277,7 +283,7 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  *       500:
  *         description: "Server error"
 */
-router.post('/videos', video.createVideo);
+router.post('/videos', checkJwt, video.createVideo);
 
 /**
  * @swagger
