@@ -143,17 +143,17 @@ router.get('/videos/:video_id', video.getVideoById);
 
 /** 
  * @swagger
- * /videos/game/{game_id}:
+ * /videos/game/{game_name}:
  *   get:
- *     summary: "Get all the videos of a certain game by id"
+ *     summary: "Get all the videos of a certain game by name"
  *     tags: [Videos]
  *     parameters:
  *       - in: path
- *         name: game_id
+ *         name: game_name
  *         schema:
  *           type: string
  *         required: true
- *         description: "A game id"
+ *         description: "The game's name"
  *     responses:
  *       200:
  *         description: "The list of the videos that belongs to the game"
@@ -185,7 +185,7 @@ router.get('/videos/:video_id', video.getVideoById);
  *       500:
  *         description: "Server error"
 */
-router.get('/videos/game/:game_id', video.getVideosOfGame);
+router.get('/videos/game/:game_name', video.getVideosOfGame);
 
 
 /** 

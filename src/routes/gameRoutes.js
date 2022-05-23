@@ -79,7 +79,7 @@ router.get('/games', game.getGames);
 
 /** 
  * @swagger
- * /game_id/{game_id}:
+ * /game/id/{game_id}:
  *   get:
  *     summary: "Get game by id"
  *     tags: [Games]
@@ -104,12 +104,12 @@ router.get('/games', game.getGames);
  *       500:
  *         description: "Server error"
 */
-router.get('/game_id/:game_id', game.getGameById);
+router.get('/game/id/:game_id', game.getGameById);
 
 
 /** 
  * @swagger
- * /game_name/{game_name}:
+ * /game/name/{game_name}:
  *   get:
  *     summary: "Get game by name"
  *     tags: [Games]
@@ -134,7 +134,7 @@ router.get('/game_id/:game_id', game.getGameById);
  *       500:
  *         description: "Server error"
 */
-router.get('/game_name/:game_name', game.getGameByName);
+router.get('/game/name/:game_name', game.getGameByName);
 
 
 // EXPORT

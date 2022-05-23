@@ -31,8 +31,8 @@ const getVideoById = async (request, response) => {
 
 const getVideosOfGame = async (request, response) => {
     try{
-        let game_id = request.params.game_id.toString();
-        let getQuery = `SELECT * FROM speedrun_videos WHERE game_id=${escape.literal(game_id)}`;
+        let game_id = request.params.game_name.toString();
+        let getQuery = `SELECT speedrun_videos.id, user_id, game_name, category_id, link_video, completion_time_seconds, speedrun_videos.created_at, speedrun_videos.updated_at FROM speedrun_videos, games WHERE games.game_name=${escape.literal(game_id)} AND games.id = game_id`;
         let result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
