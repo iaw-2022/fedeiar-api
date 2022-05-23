@@ -79,7 +79,7 @@ router.get('/games', game.getGames);
 
 /** 
  * @swagger
- * /games/{game_id}:
+ * /game_id/{game_id}:
  *   get:
  *     summary: "Get game by id"
  *     tags: [Games]
@@ -104,7 +104,37 @@ router.get('/games', game.getGames);
  *       500:
  *         description: "Server error"
 */
-router.get('/games/:game_id', game.getGameById);
+router.get('/game_id/:game_id', game.getGameById);
+
+
+/** 
+ * @swagger
+ * /game_name/{game_name}:
+ *   get:
+ *     summary: "Get game by name"
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: game_name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The game's name"
+ *     responses:
+ *       200:
+ *         description: "The game description"
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 $ref: '#components/schemas/Game'
+ *       404:
+ *         description: "Game not found"
+ *       400:
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
+*/
+router.get('/game_name/:game_name', game.getGameByName);
 
 
 // EXPORT
