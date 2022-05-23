@@ -145,7 +145,7 @@ router.get('/videos/:video_id', video.getVideoById);
  * @swagger
  * /videos/game/{game_id}:
  *   get:
- *     summary: "Get all the videos of a certain game"
+ *     summary: "Get all the videos of a certain game by id"
  *     tags: [Videos]
  *     parameters:
  *       - in: path
