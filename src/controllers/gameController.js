@@ -30,28 +30,7 @@ const getGameById = async (request, response) => {
     }
 }
 
-const getGameByName = async (request, response) => {
-    let game_name = request.params.game_name.toString();
-    console.log(game_name);
-    try{
-        const getQuery = `SELECT * FROM games WHERE game_name=${escape.literal(game_name)}`;
-        let result = await pool.query(getQuery);
-        if(result.rowCount == 0){
-            response.status(404).json({"message": `Game with name ${game_name} doesn't exists`, "code": 404});
-            return;
-        }
-        response.status(200).json(result.rows[0]);
-    } catch(error){
-        if(errorCodes.invalidType(error)){
-            response.status(400).json({"message": `Error: name must be a string`, "code": 400});
-        }else{
-            response.status(500).json({"message": "Unknown server error.", "code": 500});
-        }
-    }
-}
-
 module.exports = {
     getGames,
     getGameById,
-    getGameByName
 }
