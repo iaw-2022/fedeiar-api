@@ -55,17 +55,17 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 /**
  * @swagger
- * /categories/{game_name}:
+ * /categories/{game_id}:
  *   get:
  *     summary: "Get all the categories for the corresponding game"
  *     tags: [Categories]
  *     parameters:
  *       - in: path
- *         name: game_name
+ *         name: game_id
  *         schema:
  *           type: string
  *         required: true
- *         description: "The game's name"
+ *         description: "The game id"
  *     responses:
  *       200:
  *         description: "The list of the categories that belong to the game"
@@ -93,7 +93,7 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *       500:
  *         description: "Server error"
  */
-router.get('/categories/:game_name', category.getCategories);
+router.get('/categories/:game_id', category.getCategories);
 
 // EXPORT
 
