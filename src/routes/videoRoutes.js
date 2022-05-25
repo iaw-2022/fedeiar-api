@@ -26,9 +26,6 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *         id:
  *           type: string
  *           description: "The auto-generated id of the video"
- *         game_id:
- *           type: string
- *           description: "The game's id to which the video belongs to"
  *         user_name:
  *           type: string
  *           description: "The user's name to which the video belongs to"
@@ -52,7 +49,6 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           description: "Category's auto-generated last update date"
  *       example:
  *         id: "1"
- *         game_id: "1"
  *         user_name: "pepe"
  *         game_name: "Klonoa"
  *         category_name: "any%"
@@ -88,7 +84,6 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   game_id: "1"
  *                   user_name: "pepe"
  *                   game_name: "Klonoa"
  *                   category_name: "any%"
@@ -97,8 +92,7 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   game_id: "2"
- *                   user_id: "pipa"
+ *                   user_name: "pipa"
  *                   game_name: "Medievil"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
@@ -165,7 +159,6 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   game_id: "1"
  *                   user_name: "pepe"
  *                   game_name: "Klonoa"
  *                   category_name: "any%"
@@ -174,8 +167,7 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   game_id: "2"
- *                   user_id: "pipa"
+ *                   user_name: "pipa"
  *                   game_name: "Medievil"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
@@ -220,7 +212,6 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   game_id: "1"
  *                   user_name: "pepe"
  *                   game_name: "Klonoa"
  *                   category_name: "any%"
@@ -229,8 +220,7 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   game_id: "2"
- *                   user_id: "pipa"
+ *                   user_name: "pipa"
  *                   game_name: "Medievil"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"

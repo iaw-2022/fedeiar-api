@@ -4,7 +4,7 @@ const escape = require('pg-escape');
 
 const getVideos = async (request, response) => {
     try{
-        let result = await pool.query("SELECT videos.id, games.id AS game_id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id");
+        let result = await pool.query("SELECT videos.id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id");
         response.status(200).json(result.rows);
     } catch(error){
         response.status(500).json({"message": "Unknown server error.", "code": 500});
@@ -14,7 +14,7 @@ const getVideos = async (request, response) => {
 const getVideoById = async (request, response) => {
     let video_id = request.params.video_id.toString();
     try{
-        let getQuery = `SELECT videos.id, games.id AS game_id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE videos.id=${escape.literal(video_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
+        let getQuery = `SELECT videos.id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE videos.id=${escape.literal(video_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
         let result = await pool.query(getQuery);
         if(result.rowCount == 0){
             response.status(404).json({"message": `Video with ID ${video_id} doesn't exists`, "code": 404});
@@ -33,7 +33,7 @@ const getVideoById = async (request, response) => {
 const getVideosOfGame = async (request, response) => {
     try{
         let game_id = request.params.game_id.toString();
-        let getQuery = `SELECT videos.id, games.id AS game_id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE games.id=${escape.literal(game_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
+        let getQuery = `SELECT videos.id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE games.id=${escape.literal(game_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
         let result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
@@ -49,7 +49,7 @@ const getVideosOfGameAndCategory = async (request, response) => {
     try{
         let game_id = request.params.game_id.toString();
         let category_id = request.params.category_id.toString();
-        let getQuery = `SELECT videos.id, games.id AS game_id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE games.id=${escape.literal(game_id)} AND categories.id=${escape.literal(category_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
+        let getQuery = `SELECT videos.id, user_name, game_name, category_name, link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE games.id=${escape.literal(game_id)} AND categories.id=${escape.literal(category_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
         result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
