@@ -5,7 +5,7 @@ const escape = require('pg-escape');
 const getCategories = async (request, response) => {
     let game_id = request.params.game_id.toString();
     try{
-        let getQuery = `SELECT * FROM categories WHERE game_id=${escape.literal(game_id)}`;
+        let getQuery = `SELECT categories.id, game_name, category_name FROM categories, games WHERE game_id=${escape.literal(game_id)} AND game_id = games.id`;
         const result = await pool.query(getQuery);
         if(result.rowCount == 0){
             response.status(404).json({"message": `Game with ID ${game_id} doesn't exists`, "code": 404});

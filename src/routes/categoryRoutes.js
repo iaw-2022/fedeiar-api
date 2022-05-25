@@ -17,31 +17,20 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *   schemas:
  *     Category:
  *       type: object
- *       required:
- *         - game_id
- *         - category_name
  *       properties:
  *         id:
  *           type: string
  *           description: "The auto-generated id of the category"
- *         game_id:
+ *         game_name:
  *           type: string
- *           description: "The game's id to which the category belongs to"
+ *           description: "The game's name to which the category belongs to"
  *         category_name:
  *           type: string
  *           description: "Name of the category"
- *         created_at:
- *           type: string
- *           description: "Category's auto-generated creation date"
- *         updated_at:
- *           type: string
- *           description: "Category's auto-generated last update date"
  *       example:
  *         id: "1"
- *         game_id: "1"
+ *         game_name: "Medievil"
  *         category_name: "any%"
- *         created_at: "2022-05-12 03:53:45"
- *         updated_at: "2022-05-12 03:53:45"
  */
 
 /**
@@ -77,15 +66,11 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *                 $ref: '#components/schemas/Category'
  *               example:
  *                 - id: "1"
- *                   game_id: "1"
+ *                   game_name: "Medievil"
  *                   category_name: "any%"
- *                   created_at: "2022-05-12 03:53:45"
- *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   game_id: "1"
- *                   category_name: "low%"
- *                   created_at: "2022-05-12 03:53:45"
- *                   updated_at: "2022-05-12 03:53:45" 
+ *                   game_name: "Devil May Cry"
+ *                   category_name: "low%" 
  *       400:
  *         description: "Invalid ID"
  *       404:

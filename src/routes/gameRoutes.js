@@ -16,8 +16,6 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *   schemas:
  *     Game:
  *       type: object
- *       required:
- *         - game_name
  *       properties:
  *         id:
  *           type: string

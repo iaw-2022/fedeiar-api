@@ -22,25 +22,22 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *   schemas:
  *     Video:
  *       type: object
- *       required:
- *         - user_id
- *         - game_id
- *         - category_id
- *         - link_video
- *         - completion_time_seconds
  *       properties:
  *         id:
  *           type: string
  *           description: "The auto-generated id of the video"
- *         user_id:
- *           type: string
- *           description: "The user's id to which the video belongs to"
  *         game_id:
  *           type: string
  *           description: "The game's id to which the video belongs to"
- *         category_id:
+ *         user_name:
  *           type: string
- *           description: "The category's id to which the video belongs to"
+ *           description: "The user's name to which the video belongs to"
+ *         game_name:
+ *           type: string
+ *           description: "The game's name to which the video belongs to"
+ *         category_name:
+ *           type: string
+ *           description: "The category's name to which the video belongs to"
  *         link_video:
  *           type: string
  *           description: "URL of the video"
@@ -55,9 +52,10 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           description: "Category's auto-generated last update date"
  *       example:
  *         id: "1"
- *         user_id: "1"
  *         game_id: "1"
- *         category_id: "1"
+ *         user_name: "pepe"
+ *         game_name: "Klonoa"
+ *         category_name: "any%"
  *         link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *         completion_time_seconds: 420
  *         created_at: "2022-05-12 03:53:45"
@@ -90,17 +88,19 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   user_id: "1"
  *                   game_id: "1"
- *                   category_id: "1"
+ *                   user_name: "pepe"
+ *                   game_name: "Klonoa"
+ *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   user_id: "1"
- *                   game_id: "1"
- *                   category_id: "2"
+ *                   game_id: "2"
+ *                   user_id: "pipa"
+ *                   game_name: "Medievil"
+ *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -165,17 +165,19 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   user_id: "1"
  *                   game_id: "1"
- *                   category_id: "1"
+ *                   user_name: "pepe"
+ *                   game_name: "Klonoa"
+ *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   user_id: "1"
- *                   game_id: "1"
- *                   category_id: "2"
+ *                   game_id: "2"
+ *                   user_id: "pipa"
+ *                   game_name: "Medievil"
+ *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -218,17 +220,19 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   $ref: '#components/schemas/Video'
  *               example:
  *                 - id: "1"
- *                   user_id: "1"
  *                   game_id: "1"
- *                   category_id: "1"
+ *                   user_name: "pepe"
+ *                   game_name: "Klonoa"
+ *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   user_id: "1"
- *                   game_id: "1"
- *                   category_id: "2"
+ *                   game_id: "2"
+ *                   user_id: "pipa"
+ *                   game_name: "Medievil"
+ *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -253,6 +257,12 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - user_id
+ *               - game_id
+ *               - category_id
+ *               - link
+ *               - time
  *             properties:
  *               user_id:
  *                 type: string

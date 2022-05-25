@@ -16,16 +16,11 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *   schemas:
  *     User:
  *       type: object
- *       required:
- *         - name
- *         - email
- *         - nationality
- *         - role
  *       properties:
  *         id:
  *           type: string
  *           description: "The auto-generated id of the user"
- *         name:
+ *         user_name:
  *           type: string
  *           description: "user's username"
  *         email:
@@ -45,7 +40,7 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *           description: "user's auto-generated last update date"
  *       example:
  *         id: "1"
- *         name: "bousher"
+ *         user_name: "bousher"
  *         email: "a_mail@mail.com"
  *         nationality: "Argentina"
  *         role: "administrator"
@@ -79,14 +74,14 @@ router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *                 $ref: '#components/schemas/User'
  *               example:
  *                 - id: "1"
- *                   name: "bousher"
+ *                   user_name: "bousher"
  *                   email: "a_mail@mail.com"
  *                   nationality: "Argentina"
  *                   role: "administrator"
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
- *                   name: "juan"
+ *                   user_name: "juan"
  *                   email: "a_mail2@mail.com"
  *                   nationality: "Argentina"
  *                   role: "administrator"
