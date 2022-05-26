@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const router = Router();
-const { swaggerUI, swaggerDocs } = require('../swagger.js');
 const { auth } = require('express-oauth2-jwt-bearer');
 
 const checkJwt = auth({
@@ -9,8 +8,6 @@ const checkJwt = auth({
 });
 
 const video = require('../controllers/videoController.js');
-
-router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- VIDEOS ROUTES ----------------------------------------------
 
@@ -240,6 +237,8 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  * /videos:
  *   post:
  *     summary: "Create a new video"
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Videos]
  *     requestBody:
  *       required: true
@@ -280,6 +279,8 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  *         description: "Video successfully created"
  *       400:
  *         description: "non-existing IDs in JSON, invalid JSON or game name already exists"
+ *       401:
+ *         description: "Unauthorized"
  *       500:
  *         description: "Server error"
 */
@@ -290,6 +291,8 @@ router.post('/videos', checkJwt, video.createVideo);
  * /videos/{video_id}:
  *   put:
  *     summary: "Update the desired fields of an existing video, by id."
+ *     security:
+ *       - BearerAuth: []
  *     description: "It's not obligatory to update all the fields, just the desired ones."
  *     tags: [Videos]
  *     parameters:
@@ -334,10 +337,12 @@ router.post('/videos', checkJwt, video.createVideo);
  *         description: "non-existing IDs in JSON, invalid JSON or game name already exists"
  *       404:
  *         description: "Video not found"
+ *       401:
+ *         description: "Unauthorized"
  *       500:
  *         description: "Server error"
 */
-router.put('/videos/:video_id', video.updateVideo);
+router.put('/videos/:video_id', checkJwt, video.updateVideo);
 
 
 /** 
@@ -345,6 +350,8 @@ router.put('/videos/:video_id', video.updateVideo);
  * /videos/{video_id}:
  *   delete:
  *     summary: "Remove video by id"
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Videos]
  *     parameters:
  *       - in: path
@@ -360,10 +367,12 @@ router.put('/videos/:video_id', video.updateVideo);
  *         description: "Video not found"
  *       400:
  *         description: "Invalid ID"
+ *       401:
+ *         description: "Unauthorized"
  *       500:
  *         description: "Server error"
 */
-router.delete('/videos/:video_id', video.deleteVideo);
+router.delete('/videos/:video_id', checkJwt, video.deleteVideo);
 
 // EXPORT
 

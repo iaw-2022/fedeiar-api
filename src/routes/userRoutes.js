@@ -1,10 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const { swaggerUI, swaggerDocs } = require('../swagger.js');
 
 const user = require('../controllers/userController.js');
-
-router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- USERS ROUTES ----------------------------------------------
 

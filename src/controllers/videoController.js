@@ -62,6 +62,8 @@ const getVideosOfGameAndCategory = async (request, response) => {
 }
 
 const createVideo = async (request, response) => {
+    //const email = request.auth.payload['https://example.com/email']
+
     const video = request.body;
     if(!video.user_id || !video.game_id || !video.category_id || !video.link || !video.time){
         response.status(400).json({"message": "One of the following fields is missing: 'user_id', 'game_id' ,'category_id', 'link', 'time'", "code": 400});

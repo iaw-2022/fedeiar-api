@@ -14,6 +14,23 @@ app.get('/', (request, response) => {
     response.send("Welcome to the API!");
 });
 
+// ---------------------------------------------- SWAGGER ----------------------------------------------
+
+const { swaggerUI, swaggerDocs } = require('./swagger.js');
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+//  Swagger Auth
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ */
+
 // ---------------------------------------------- ROUTES ----------------------------------------------
 
 app.use(require('./routes/userRoutes.js'));

@@ -1,10 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const { swaggerUI, swaggerDocs } = require('../swagger.js');
 
 const category = require('../controllers/categoryController.js');
-
-router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 
 // ---------------------------------------------- CATEGORIES ROUTES ----------------------------------------------

@@ -11,7 +11,7 @@ const swaggerOptions = {
         },
         host: "https://proyecto-api-fedeiar.herokuapp.com/"
     },
-    apis: ['./src/routes/userRoutes.js', './src/routes/gameRoutes.js', './src/routes/categoryRoutes.js', './src/routes/videoRoutes.js'],
+    apis: ['./src/index.js', './src/routes/userRoutes.js', './src/routes/gameRoutes.js', './src/routes/categoryRoutes.js', './src/routes/videoRoutes.js'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

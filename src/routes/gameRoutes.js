@@ -1,10 +1,8 @@
 const { Router } = require('express');
 const router = Router();
-const { swaggerUI, swaggerDocs } = require('../swagger.js');
 
 const game = require('../controllers/gameController.js');
 
-router.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // ---------------------------------------------- GAMES ROUTES ----------------------------------------------
 
