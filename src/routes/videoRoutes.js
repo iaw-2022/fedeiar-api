@@ -26,9 +26,15 @@ const video = require('../controllers/videoController.js');
  *         user_name:
  *           type: string
  *           description: "The user's name to which the video belongs to"
+ *         user_id:
+ *           type: string
+ *           description: "The user's id to which the video belongs to"
  *         game_name:
  *           type: string
  *           description: "The game's name to which the video belongs to"
+ *         game_id:
+ *           type: string
+ *           description: "The game's id to which the video belongs to"
  *         category_name:
  *           type: string
  *           description: "The category's name to which the video belongs to"
@@ -47,7 +53,9 @@ const video = require('../controllers/videoController.js');
  *       example:
  *         id: "1"
  *         user_name: "pepe"
+ *         user_id: "2"
  *         game_name: "Klonoa"
+ *         game_id: "1"
  *         category_name: "any%"
  *         link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *         completion_time_seconds: 420
@@ -82,7 +90,9 @@ const video = require('../controllers/videoController.js');
  *               example:
  *                 - id: "1"
  *                   user_name: "pepe"
+ *                   user_id: "2"
  *                   game_name: "Klonoa"
+ *                   game_id: "1"
  *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
@@ -90,7 +100,9 @@ const video = require('../controllers/videoController.js');
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
  *                   user_name: "pipa"
+ *                   user_id: "2"
  *                   game_name: "Medievil"
+ *                   game_id: "2"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
@@ -157,7 +169,9 @@ router.get('/videos/:video_id', video.getVideoById);
  *               example:
  *                 - id: "1"
  *                   user_name: "pepe"
+ *                   user_id: "2"
  *                   game_name: "Klonoa"
+ *                   game_id: "1"
  *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
@@ -165,7 +179,9 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
  *                   user_name: "pipa"
+ *                   user_id: "2"
  *                   game_name: "Medievil"
+ *                   game_id: "2"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
@@ -177,6 +193,56 @@ router.get('/videos/:video_id', video.getVideoById);
  *         description: "Server error"
 */
 router.get('/videos/game/:game_id', video.getVideosOfGame);
+
+/** 
+ * @swagger
+ * /videos/user/{user_id}:
+ *   get:
+ *     summary: "Get all the videos of a certain user by id"
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "A user id"
+ *     responses:
+ *       200:
+ *         description: "The list of the videos that the user uploaded"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                   $ref: '#components/schemas/Video'
+ *               example:
+ *                 - id: "1"
+ *                   user_name: "pepe"
+ *                   user_id: "2"
+ *                   game_name: "Klonoa"
+ *                   game_id: "1"
+ *                   category_name: "any%"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *                 - id: "2"
+ *                   user_name: "pipa"
+ *                   user_id: "2"
+ *                   game_name: "Medievil"
+ *                   game_id: "2"
+ *                   category_name: "100%"
+ *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
+ *                   completion_time_seconds: 420
+ *                   created_at: "2022-05-12 03:53:45"
+ *                   updated_at: "2022-05-12 03:53:45"
+ *       400:
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
+*/
+router.get('/videos/user/:user_id', video.getVideosOfUser);
 
 
 /** 
@@ -210,7 +276,9 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *               example:
  *                 - id: "1"
  *                   user_name: "pepe"
+ *                   user_id: "2"
  *                   game_name: "Klonoa"
+ *                   game_id: "1"
  *                   category_name: "any%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
@@ -218,7 +286,9 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   updated_at: "2022-05-12 03:53:45"
  *                 - id: "2"
  *                   user_name: "pipa"
+ *                   user_id: "2"
  *                   game_name: "Medievil"
+ *                   game_id: "2"
  *                   category_name: "100%"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
