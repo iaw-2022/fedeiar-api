@@ -317,15 +317,11 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  *           schema:
  *             type: object
  *             required:
- *               - user_id
  *               - game_id
  *               - category_id
  *               - link
  *               - time
  *             properties:
- *               user_id:
- *                 type: string
- *                 description: "id of the user who uploads the video"
  *               game_id:
  *                 type: string
  *                 description: "id of the game which the video belongs to"
@@ -339,7 +335,6 @@ router.get('/videos/game/:game_id/category/:category_id', video.getVideosOfGameA
  *                 type: string
  *                 description: "The time (in seconds) taken to finish the game in the corresponding category"
  *             example:
- *               user_id: "1"
  *               game_id: "1"
  *               category_id: "1"
  *               link: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
@@ -379,9 +374,6 @@ router.post('/videos', checkJwt, video.createVideo);
  *           schema:
  *             type: object
  *             properties:
- *               user_id:
- *                 type: string
- *                 description: "id of the user who uploads the video"
  *               game_id:
  *                 type: string
  *                 description: "id of the game which the video belongs to"
@@ -395,7 +387,6 @@ router.post('/videos', checkJwt, video.createVideo);
  *                 type: string
  *                 description: "The time (in seconds) taken to finish the game in the corresponding category"
  *             example:
- *               user_id: "1"
  *               game_id: "1"
  *               category_id: "1"
  *               link: "https://www.youtube.com/watch?v=j5j6l9ULxmI"

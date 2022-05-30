@@ -78,11 +78,16 @@ const getVideosOfGameAndCategory = async (request, response) => {
 }
 
 const createVideo = async (request, response) => {
-    //const email = request.auth.payload['https://example.com/email']
+    const email = request.auth.payload['https://example.com/email'];
+    let video = request.body;
+    video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
+    
+    if(email != null){
+        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
+    }
 
-    const video = request.body;
-    if(!video.user_id || !video.game_id || !video.category_id || !video.link || !video.time){
-        response.status(400).json({"message": "One of the following fields is missing: 'user_id', 'game_id' ,'category_id', 'link', 'time'", "code": 400});
+    if(!video.game_id || !video.category_id || !video.link || !video.time){
+        response.status(400).json({"message": "One of the following fields is missing: 'game_id' ,'category_id', 'link', 'time'", "code": 400});
         return;
     }
     let user_id = video.user_id.toString(), game_id = video.game_id.toString(), category_id = video.category_id.toString(), link = video.link.toString(), time = video.time.toString();
@@ -104,13 +109,19 @@ const createVideo = async (request, response) => {
 }
 
 const updateVideo = async (request, response) => {
+    const email = request.auth.payload['https://example.com/email'];
+    let video = request.body;
+    video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
+    
+    if(email != null){
+        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
+    }
+
     let video_id = request.params.video_id.toString();
-    const video = request.body;
     currentDate = new Date().toISOString();
 
     let updateQuery = "UPDATE speedrun_videos SET ";
 
-    if(video.user_id) {updateQuery += `user_id=${escape.literal(video.user_id.toString())}, `}
     if(video.game_id) {updateQuery += `game_id=${escape.literal(video.game_id.toString())}, `}
     if(video.category_id) {updateQuery += `category_id=${escape.literal(video.category_id.toString())}, `}
     if(video.link) {updateQuery += `link_video=${escape.literal(video.link.toString())}, `}
@@ -137,6 +148,14 @@ const updateVideo = async (request, response) => {
 }
 
 const deleteVideo = async (request, response) => {
+    const email = request.auth.payload['https://example.com/email'];
+    let video = request.body;
+    video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
+    
+    if(email != null){
+        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
+    }
+
     let video_id = request.params.video_id.toString();
     try{
         let deleteQuery = `DELETE FROM speedrun_videos WHERE id=${escape.literal(video_id)}`;
