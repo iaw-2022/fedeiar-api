@@ -38,6 +38,9 @@ const video = require('../controllers/videoController.js');
  *         category_name:
  *           type: string
  *           description: "The category's name to which the video belongs to"
+ *         category_id:
+ *           type: string
+ *           description: "The category's id to which the video belongs to"
  *         link_video:
  *           type: string
  *           description: "URL of the video"
@@ -57,6 +60,7 @@ const video = require('../controllers/videoController.js');
  *         game_name: "Klonoa"
  *         game_id: "1"
  *         category_name: "any%"
+ *         category_id: "1"
  *         link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *         completion_time_seconds: 420
  *         created_at: "2022-05-12 03:53:45"
@@ -94,6 +98,7 @@ const video = require('../controllers/videoController.js');
  *                   game_name: "Klonoa"
  *                   game_id: "1"
  *                   category_name: "any%"
+ *                   category_id: "1"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -104,6 +109,7 @@ const video = require('../controllers/videoController.js');
  *                   game_name: "Medievil"
  *                   game_id: "2"
  *                   category_name: "100%"
+ *                   category_id: "2"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -173,6 +179,7 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   game_name: "Klonoa"
  *                   game_id: "1"
  *                   category_name: "any%"
+ *                   category_id: "1"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -183,6 +190,7 @@ router.get('/videos/:video_id', video.getVideoById);
  *                   game_name: "Medievil"
  *                   game_id: "2"
  *                   category_name: "100%"
+ *                   category_id: "2"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -223,6 +231,7 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   game_name: "Klonoa"
  *                   game_id: "1"
  *                   category_name: "any%"
+ *                   category_id: "1"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -233,6 +242,7 @@ router.get('/videos/game/:game_id', video.getVideosOfGame);
  *                   game_name: "Medievil"
  *                   game_id: "2"
  *                   category_name: "100%"
+ *                   category_id: "2"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -280,6 +290,7 @@ router.get('/videos/user/:user_id', video.getVideosOfUser);
  *                   game_name: "Klonoa"
  *                   game_id: "1"
  *                   category_name: "any%"
+ *                   category_id: "1"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
@@ -290,6 +301,7 @@ router.get('/videos/user/:user_id', video.getVideosOfUser);
  *                   game_name: "Medievil"
  *                   game_id: "2"
  *                   category_name: "100%"
+ *                   category_id: "2"
  *                   link_video: "https://www.youtube.com/watch?v=j5j6l9ULxmI"
  *                   completion_time_seconds: 420
  *                   created_at: "2022-05-12 03:53:45"
