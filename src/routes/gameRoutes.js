@@ -34,8 +34,6 @@ const game = require('../controllers/gameController.js');
  *           updated_at: "2022-05-12 03:53:45"
  */
 
-
-
 /**
  * @swagger
  * tags:

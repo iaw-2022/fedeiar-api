@@ -1,7 +1,9 @@
 const { Router } = require('express');
 const router = Router();
+const { checkJwt } = require('../token.js');
 
 const user = require('../controllers/userController.js');
+
 
 // ---------------------------------------------- USERS ROUTES ----------------------------------------------
 
@@ -118,7 +120,44 @@ router.get('/users', user.getUsers);
 */
 router.get('/users/:user_id', user.getUserById);
 
-
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: "Create a new final user"
+ *     security:
+ *       - BearerAuth: []
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - user_name
+ *               - nationality
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *                 description: "user's username"
+ *               nationality:
+ *                 type: string
+ *                 description: "user's nationality"
+ *             example:
+ *               user_name: "not_bousher"
+ *               nationality: "Uruguay"
+ *     responses:
+ *       204:
+ *         description: "Video successfully created"
+ *       400:
+ *         description: "non-existing IDs in JSON, invalid JSON or game name already exists"
+ *       401:
+ *         description: "Unauthorized"
+ *       500:
+ *         description: "Server error"
+*/
+router.post('/users', checkJwt, user.createUser);
 
 // EXPORT
 

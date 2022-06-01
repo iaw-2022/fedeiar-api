@@ -30,7 +30,38 @@ const getUserById = async (request, response) => {
     }
 }
 
+const createUser = async (request, response) => {
+    let email = request.auth.payload['https://example.com/email'];
+    let user = request.body;
+    
+    if(email == null){
+        email = 'user_swagger_test'+Math.floor(Math.random() * 1000000);
+    }
+    
+
+    if(!user.user_name || !user.nationality){
+        response.status(400).json({"message": "One of the following fields is missing: 'user_name' ,'nationality'", "code": 400});
+        return;
+    }
+    let user_name = user.user_name.toString(), nationality = user.nationality.toString(), role = 'final_user';
+    email = email.toString();
+    currentDate = new Date().toISOString();
+
+    try{
+        let insertUserQuery = `INSERT INTO users(user_name, email, nationality, role, created_at, updated_at) VALUES(${escape.literal(user_name)}, ${escape.literal(email)}, ${escape.literal(nationality)}, ${escape.literal(role)}, '${currentDate}', '${currentDate}')`;
+        await pool.query(insertUserQuery);
+        response.status(204).json();
+    } catch(error){
+        if(errorCodes.duplicatedKey(error)){
+            response.status(400).json({"message": "Error, username already exists, choose another username", "code": 400});
+        } else{
+            response.status(500).json({"message": "Unknown server error.", "code": 500});
+        }
+    }
+}
+
 module.exports = {
     getUsers,
-    getUserById
+    getUserById,
+    createUser
 };
