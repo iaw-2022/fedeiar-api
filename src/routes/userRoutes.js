@@ -120,6 +120,33 @@ router.get('/users', user.getUsers);
 */
 router.get('/users/:user_id', user.getUserById);
 
+/** 
+ * @swagger
+ * /users/email/{user_email}:
+ *   get:
+ *     summary: "Get user by email"
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: user_email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The user's email"
+ *     responses:
+ *       200:
+ *         description: "The user description"
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 $ref: '#components/schemas/User'
+ *       404:
+ *         description: "User not found"
+ *       500:
+ *         description: "Server error"
+*/
+router.get('/users/email/:user_email', user.getUserByEmail);
+
 /**
  * @swagger
  * /users:

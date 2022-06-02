@@ -30,6 +30,20 @@ const getUserById = async (request, response) => {
     }
 }
 
+const getUserByEmail = async (request, response) => {
+    let user_email = request.params.user_email.toString();
+    try{
+        let result = await pool.query(`SELECT id, user_name, email, nationality, role, created_at, updated_at FROM users WHERE email=${escape.literal(user_email)}`);
+        if(result.rowCount == 0){
+            response.status(404).json({"message": `User with email ${user_email} doesn't exists`, "code": 404});
+            return;
+        }
+        response.status(200).json(result.rows[0]);
+    } catch(error){
+        response.status(500).json({"message": "Unknown server error.", "code": 500});
+    }
+}
+
 const createUser = async (request, response) => {
     let email = request.auth.payload['https://example.com/email'];
     let user = request.body;
@@ -63,5 +77,6 @@ const createUser = async (request, response) => {
 module.exports = {
     getUsers,
     getUserById,
+    getUserByEmail,
     createUser
 };

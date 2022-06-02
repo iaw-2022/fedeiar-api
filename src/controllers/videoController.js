@@ -66,7 +66,7 @@ const getVideosOfGameAndCategory = async (request, response) => {
         let game_id = request.params.game_id.toString();
         let category_id = request.params.category_id.toString();
         let getQuery = `SELECT videos.id, user_name, user_id, game_name, games.id AS game_id, category_name, categories.id AS category_id,link_video, completion_time_seconds, videos.created_at, videos.updated_at FROM speedrun_videos AS videos, categories, games, users WHERE games.id=${escape.literal(game_id)} AND categories.id=${escape.literal(category_id)} AND videos.user_id = users.id AND videos.game_id = games.id AND videos.category_id = categories.id`;
-        result = await pool.query(getQuery);
+        const result = await pool.query(getQuery);
         response.status(200).json(result.rows);
     } catch(error){
         if(errorCodes.invalidType(error)){
@@ -83,9 +83,18 @@ const createVideo = async (request, response) => {
     video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
     
     if(email != null){
-        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
+        try{
+            const getUserQuery = `SELECT * FROM users WHERE email=${escape.literal(email)}`
+            let result = await pool.query(getUserQuery);
+            result = result.rows[0];
+            video.user_id = result.id;
+            console.log(video.user_id);
+        }catch(error){
+            response.status(500).json({"message": "Unknown server error.", "code": 500});
+            return;
+        }
     }
-
+    
     if(!video.game_id || !video.category_id || !video.link || !video.time){
         response.status(400).json({"message": "One of the following fields is missing: 'game_id' ,'category_id', 'link', 'time'", "code": 400});
         return;
