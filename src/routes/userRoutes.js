@@ -122,17 +122,12 @@ router.get('/users/:user_id', user.getUserById);
 
 /** 
  * @swagger
- * /users/email/{user_email}:
+ * /user_logged:
  *   get:
- *     summary: "Get user by email"
+ *     summary: "Get the currently logged user in auth0"
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: user_email
- *         schema:
- *           type: string
- *         required: true
- *         description: "The user's email"
  *     responses:
  *       200:
  *         description: "The user description"
@@ -140,12 +135,12 @@ router.get('/users/:user_id', user.getUserById);
  *           application/json:
  *             schema:
  *                 $ref: '#components/schemas/User'
- *       404:
- *         description: "User not found"
+ *       401:
+ *         description: "User must be logged in auth0"
  *       500:
  *         description: "Server error"
 */
-router.get('/users/email/:user_email', user.getUserByEmail);
+router.get('/user_logged', checkJwt, user.getUserByEmail);
 
 /**
  * @swagger

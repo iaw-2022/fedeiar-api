@@ -31,7 +31,10 @@ const getUserById = async (request, response) => {
 }
 
 const getUserByEmail = async (request, response) => {
-    let user_email = request.params.user_email.toString();
+    let user_email = request.auth.payload['https://example.com/email'];
+    if(user_email == null){
+        response.status(401).json({"message": "User must be logged in auth0 in order to use this route.", "code": 401});
+    }
     try{
         let result = await pool.query(`SELECT id, user_name, email, nationality, role, created_at, updated_at FROM users WHERE email=${escape.literal(user_email)}`);
         if(result.rowCount == 0){
