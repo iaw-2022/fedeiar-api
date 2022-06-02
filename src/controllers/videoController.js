@@ -119,13 +119,19 @@ const createVideo = async (request, response) => {
 const updateVideo = async (request, response) => {
     const email = request.auth.payload['https://example.com/email'];
     let video = request.body;
+    let video_id = request.params.video_id.toString();
     video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
     
-    if(email != null){
-        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
+    if(!(await existsVideo(response, video_id))){
+        return;
     }
 
-    let video_id = request.params.video_id.toString();
+    if(email != null){
+        if(!(await videoBelongsToUser(response, email, video_id))){
+            return;
+        }
+    }
+    
     currentDate = new Date().toISOString();
 
     let updateQuery = "UPDATE speedrun_videos SET ";
@@ -138,47 +144,71 @@ const updateVideo = async (request, response) => {
     updateQuery += `updated_at='${currentDate}' WHERE id=${escape.literal(video_id)}`;
 
     try{
-        let result = await pool.query(updateQuery);
-        if(result.rowCount == 0){
-            response.status(404).json({"message": `Video with ID ${video_id} doesn't exists`, "code": 404});
-            return;
-        }
+        await pool.query(updateQuery);
         response.status(204).json();
     } catch(error){
-        if(errorCodes.invalidType(error)){
-            response.status(400).json({"message": "Error: ID must be number", "code": 400});
-        } else if(errorCodes.missingKey(error)){
-            response.status(400).json({"message": "error, check that the user_id, the game_id and the category_id for that game exists.", "code": 400});
+        if(errorCodes.missingKey(error)){
+            response.status(400).json({"message": "error, check that the game_id and the category_id for that game exists.", "code": 400});
         } else{
             response.status(500).json({"message": "Unknown server error.", "code": 500});
         }
     }
 }
 
-const deleteVideo = async (request, response) => {
-    const email = request.auth.payload['https://example.com/email'];
-    let video = request.body;
-    video.user_id = 1; // Usamos un usuario por defecto en caso de que estemos usando la API para probar la ruta.
-    
-    if(email != null){
-        // aca deberíamos obtener el id del usuario asociado a ese mail, pero antes de hacer esto hay q resolver el tema de las tablas de usuarios.
-    }
-
-    let video_id = request.params.video_id.toString();
+async function existsVideo(response, video_id){
     try{
-        let deleteQuery = `DELETE FROM speedrun_videos WHERE id=${escape.literal(video_id)}`;
-        let result = await pool.query(deleteQuery);
+        const getVideoQuery = `SELECT * FROM speedrun_videos WHERE id=${escape.literal(video_id)}`
+        let result = await pool.query(getVideoQuery);
         if(result.rowCount == 0){
-            response.status(404).json({"message": `Video with ID ${video_id} doesn't exists, nothing to delete`, "code": 404});
-            return;
+            response.status(404).json({"message": `Video with ID ${video_id} doesn't exists`, "code": 404});
+            return false;
         }
-        response.status(204).json();
-    } catch(error){
+        return true;
+    }catch(error){
         if(errorCodes.invalidType(error)){
             response.status(400).json({"message": "Error: ID must be number", "code": 400});
-        } else{
+        }else{
             response.status(500).json({"message": "Unknown server error.", "code": 500});
         }
+        return false;;
+    }
+}
+
+async function videoBelongsToUser(response, email, video_id){
+    try{
+        const getVideoQuery = `SELECT * FROM users INNER JOIN speedrun_videos AS videos ON users.id = videos.user_id WHERE users.email=${escape.literal(email)} AND videos.id=${escape.literal(video_id)}`
+        let result = await pool.query(getVideoQuery);
+        if(result.rowCount == 0){
+            response.status(401).json({"message": `Unauthorized: you can't edit or delete other user's videos.`, "code": 401});
+            return false;
+        }
+        return true;
+    }catch(error){
+        response.status(500).json({"message": "Unknown server error.", "code": 500});
+        return false;
+    }
+}
+
+const deleteVideo = async (request, response) => {
+    const video_id = request.params.video_id.toString();
+    const email = request.auth.payload['https://example.com/email'];
+
+    if(!(await existsVideo(response, video_id))){
+        return;
+    }
+
+    if(email != null){
+        if(!(await videoBelongsToUser(response, email, video_id))){
+            return;
+        }
+    }
+
+    try{
+        const deleteQuery = `DELETE FROM speedrun_videos WHERE id=${escape.literal(video_id)}`;
+        const result = await pool.query(deleteQuery);
+        response.status(204).json();
+    } catch(error){
+        response.status(500).json({"message": "Unknown server error.", "code": 500});
     }
 }
 
