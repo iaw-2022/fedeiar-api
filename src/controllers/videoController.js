@@ -88,7 +88,6 @@ const createVideo = async (request, response) => {
             let result = await pool.query(getUserQuery);
             result = result.rows[0];
             video.user_id = result.id;
-            console.log(video.user_id);
         }catch(error){
             response.status(500).json({"message": "Unknown server error.", "code": 500});
             return;
