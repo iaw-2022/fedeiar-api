@@ -15,6 +15,18 @@ const video = require('../controllers/videoController.js');
  *   schemas:
  *     Video:
  *       type: object
+ *       required:
+ *         - id
+ *         - user_name
+ *         - user_id
+ *         - game_name
+ *         - game_id
+ *         - category_name
+ *         - category_id
+ *         - link_video
+ *         - completion_time_seconds
+ *         - created_at
+ *         - updated_at
  *       properties:
  *         id:
  *           type: string

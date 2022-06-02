@@ -14,6 +14,10 @@ const category = require('../controllers/categoryController.js');
  *   schemas:
  *     Category:
  *       type: object
+ *       required:
+ *         - id
+ *         - game_name
+ *         - category_name
  *       properties:
  *         id:
  *           type: string

@@ -14,6 +14,11 @@ const game = require('../controllers/gameController.js');
  *   schemas:
  *     Game:
  *       type: object
+ *       required:
+ *         - id
+ *         - game_name
+ *         - created_at
+ *         - updated_at
  *       properties:
  *         id:
  *           type: string
