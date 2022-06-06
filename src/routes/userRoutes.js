@@ -189,6 +189,42 @@ router.get('/user_logged', checkJwt, user.getUserByEmail);
 */
 router.post('/users', checkJwt, user.createUser);
 
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   put:
+ *     summary: "Update the fields of the currently logged user in auth0."
+ *     security:
+ *       - BearerAuth: []
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *                 description: "the new user's name"
+ *               nationality:
+ *                 type: string
+ *                 description: "the new user's origin country"
+ *             example:
+ *               user_name: "new_user_name"
+ *               nationality: "Argentina"
+ *     responses:
+ *       204:
+ *         description: "User successfully updated"
+ *       400:
+ *         description: "non-existing IDs in JSON, invalid JSON or user name already exists"
+ *       401:
+ *         description: "Unauthorized"
+ *       500:
+ *         description: "Server error"
+*/
+router.put('/users/:user_id', checkJwt, user.updateUser);
+
 // EXPORT
 
 module.exports = router;

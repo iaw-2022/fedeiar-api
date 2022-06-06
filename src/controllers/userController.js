@@ -34,6 +34,7 @@ const getUserByEmail = async (request, response) => {
     let user_email = request.auth.payload['https://example.com/email'];
     if(user_email == null){
         response.status(401).json({"message": "User must be logged in auth0 in order to use this route.", "code": 401});
+        return;
     }
     try{
         let result = await pool.query(`SELECT id, user_name, email, nationality, role, created_at, updated_at FROM users WHERE email=${escape.literal(user_email)}`);
@@ -77,9 +78,40 @@ const createUser = async (request, response) => {
     }
 }
 
+const updateUser = async (request, response) => {
+    let email = request.auth.payload['https://example.com/email'];
+    let user = request.body;
+    
+    if(email == null){
+        response.status(401).json({"message": "User must be logged in auth0 in order to use this route.", "code": 401});
+        return;
+    }
+    
+    if(!user.user_name || !user.nationality){
+        response.status(400).json({"message": "One of the following fields is missing: 'user_name' ,'nationality'", "code": 400});
+        return;
+    }
+    let user_name = user.user_name.toString(), nationality = user.nationality.toString();
+    email = email.toString();
+    currentDate = new Date().toISOString();
+
+    try{
+        let updateUserQuery = `UPDATE users SET user_name=${escape.literal(user_name)}, nationality=${escape.literal(nationality)}, updated_at='${currentDate}' WHERE email=${escape.literal(email)}`;
+        await pool.query(updateUserQuery);
+        response.status(204).json();
+    } catch(error){
+        if(errorCodes.duplicatedKey(error)){
+            response.status(400).json({"message": "Error, username already exists, choose another username", "code": 400});
+        } else{
+            response.status(500).json({"message": "Unknown server error.", "code": 500});
+        }
+    }
+}
+
 module.exports = {
     getUsers,
     getUserById,
     getUserByEmail,
-    createUser
+    createUser,
+    updateUser,
 };
