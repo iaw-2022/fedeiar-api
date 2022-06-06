@@ -219,11 +219,29 @@ router.post('/users', checkJwt, user.createUser);
  *       400:
  *         description: "non-existing IDs in JSON, invalid JSON or user name already exists"
  *       401:
- *         description: "Unauthorized"
+ *         description: "Unauthorized: user must be logged in auth0."
  *       500:
  *         description: "Server error"
 */
 router.put('/users/:user_id', checkJwt, user.updateUser);
+
+/** 
+ * @swagger
+ * /users/{user_id}:
+ *   delete:
+ *     summary: "Delete the currently logged user in auth0"
+ *     security:
+ *       - BearerAuth: []
+ *     tags: [Users]
+ *     responses:
+ *       204:
+ *         description: "Video removed successfully"
+ *       401:
+ *         description: "Unauthorized: user must be logged in auth0."
+ *       500:
+ *         description: "Server error"
+*/
+router.delete('/users/:user_id', checkJwt, user.deleteUser);
 
 // EXPORT
 

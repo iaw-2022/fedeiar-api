@@ -108,10 +108,28 @@ const updateUser = async (request, response) => {
     }
 }
 
+const deleteUser = async (request, response) => {
+    const email = request.auth.payload['https://example.com/email'];
+
+    if(email == null){
+        response.status(401).json({"message": "User must be logged in auth0 in order to use this route.", "code": 401});
+        return;
+    }
+
+    try{
+        const deleteQuery = `DELETE FROM users WHERE email=${escape.literal(email)}`;
+        await pool.query(deleteQuery);
+        response.status(204).json();
+    } catch(error){
+        response.status(500).json({"message": "Unknown server error.", "code": 500});
+    }
+}
+
 module.exports = {
     getUsers,
     getUserById,
     getUserByEmail,
     createUser,
     updateUser,
+    deleteUser
 };
