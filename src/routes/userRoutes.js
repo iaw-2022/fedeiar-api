@@ -148,7 +148,7 @@ router.get('/users/:user_id', user.getUserById);
  *       500:
  *         description: "Server error"
 */
-router.get('/user_logged', checkJwt, user.getUserByEmail);
+router.get('/user_logged', checkJwt, user.getLoggedUser);
 
 /**
  * @swagger
@@ -191,7 +191,7 @@ router.post('/users', checkJwt, user.createUser);
 
 /**
  * @swagger
- * /users/{user_id}:
+ * /users:
  *   put:
  *     summary: "Update the fields of the currently logged user in auth0."
  *     security:
@@ -223,11 +223,11 @@ router.post('/users', checkJwt, user.createUser);
  *       500:
  *         description: "Server error"
 */
-router.put('/users/:user_id', checkJwt, user.updateUser);
+router.put('/users', checkJwt, user.updateUser);
 
 /** 
  * @swagger
- * /users/{user_id}:
+ * /users:
  *   delete:
  *     summary: "Delete the currently logged user in auth0"
  *     security:
@@ -241,7 +241,7 @@ router.put('/users/:user_id', checkJwt, user.updateUser);
  *       500:
  *         description: "Server error"
 */
-router.delete('/users/:user_id', checkJwt, user.deleteUser);
+router.delete('/users', checkJwt, user.deleteUser);
 
 // EXPORT
 

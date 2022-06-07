@@ -30,7 +30,7 @@ const getUserById = async (request, response) => {
     }
 }
 
-const getUserByEmail = async (request, response) => {
+const getLoggedUser = async (request, response) => {
     let user_email = request.auth.payload['https://example.com/email'];
     if(user_email == null){
         response.status(401).json({"message": "User must be logged in auth0 in order to use this route.", "code": 401});
@@ -128,7 +128,7 @@ const deleteUser = async (request, response) => {
 module.exports = {
     getUsers,
     getUserById,
-    getUserByEmail,
+    getLoggedUser,
     createUser,
     updateUser,
     deleteUser
