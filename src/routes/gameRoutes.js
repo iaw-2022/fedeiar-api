@@ -37,6 +37,7 @@ const game = require('../controllers/gameController.js');
  *           game_name: "Klonoa"
  *           created_at: "2022-05-12 03:53:45"
  *           updated_at: "2022-05-12 03:53:45"
+ *           api_image_route: "/games/image/1"
  */
 
 /**
@@ -68,10 +69,12 @@ const game = require('../controllers/gameController.js');
  *                   game_name: "Klonoa"
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
+ *                   api_image_route: "/games/image/1"
  *                 - id: "2"
  *                   game_name: "Dark Cloud"
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
+ *                   api_image_route: "/games/image/2"
  *               
  */
 router.get('/games', game.getGames);
@@ -104,6 +107,40 @@ router.get('/games', game.getGames);
  *         description: "Server error"
 */
 router.get('/games/:game_id', game.getGameById);
+
+/** 
+ * @swagger
+ * /games/image/{game_id}:
+ *   get:
+ *     summary: "Get game's image by id"
+ *     description: "This route is NOT intended to be used in Swagger, it's just for documentation, since it's an image, it's just a huge string of hexadecimal characters."
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: game_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The game id"
+ *     responses:
+ *       200:
+ *         description: "The game description by id"
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                   image:
+ *                     type: blob
+ *                     example: "just a laaaarge hexadecimal string"
+ *       404:
+ *         description: "Game not found"
+ *       400:
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
+*/
+router.get('/games/image/:game_id', game.getGameImageById);
 
 
 // EXPORT
