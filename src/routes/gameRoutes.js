@@ -26,6 +26,9 @@ const game = require('../controllers/gameController.js');
  *         game_name:
  *           type: string
  *           description: "Name of the game"
+ *         image:
+ *           type: string
+ *           description: "The encoding of an image in base64"
  *         created_at:
  *           type: string
  *           description: "Game's auto-generated creation date"
@@ -35,9 +38,9 @@ const game = require('../controllers/gameController.js');
  *       example:
  *           id: "1"
  *           game_name: "Klonoa"
+ *           image: <A large string>
  *           created_at: "2022-05-12 03:53:45"
  *           updated_at: "2022-05-12 03:53:45"
- *           api_image_route: "/games/image/1"
  */
 
 /**
@@ -67,14 +70,14 @@ const game = require('../controllers/gameController.js');
  *               example:
  *                 - id: "1"
  *                   game_name: "Klonoa"
+ *                   image: <A large string>
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
- *                   api_image_route: "/games/image/1"
  *                 - id: "2"
  *                   game_name: "Dark Cloud"
+ *                   image: <A large string>
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
- *                   api_image_route: "/games/image/2"
  *               
  */
 router.get('/games', game.getGames);
@@ -107,6 +110,8 @@ router.get('/games', game.getGames);
  *         description: "Server error"
 */
 router.get('/games/:game_id', game.getGameById);
+
+// TODO: borramos esta ruta?
 
 /** 
  * @swagger
