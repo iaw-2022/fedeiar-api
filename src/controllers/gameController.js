@@ -45,8 +45,13 @@ const getGameImageById = async (request, response) => { // TODO: como hago estoo
             return;
         }
         response.contentType("image/jpeg");
-        response.status(200).send(result.rows[0]);
-        //response.status(200).json(result.rows[0]);
+        //console.log(result.rows[0].image);
+        let image = 'data:image/jpg;base64,' + result.rows[0].image;
+        image = Buffer.from(image, 'base64');
+        //console.log(image);
+        //image = image.toString();
+        console.log(image);
+        response.status(200).send(image);
     } catch(error){
         if(errorCodes.invalidType(error)){
             response.status(400).json({"message": `Error: ID must be number`, "code": 400});
