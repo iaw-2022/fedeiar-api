@@ -49,9 +49,9 @@ const getGameImageById = async (request, response) => {
         }
         let game = result.rows[0];
         const fs = require('fs');
-        console.log("entre");
-        fs.writeFileSync(game.game_name+".txt", "data:image/png;base64,");
-        console.log("entre 2");
+        fs.writeFile(game.game_name+".jpg", "data:image/jpg;base64,"+game.image, {encoding: 'base64'}, function(err) {
+            console.log(err);
+        });
         
         /*
         response.contentType("image/jpeg");
