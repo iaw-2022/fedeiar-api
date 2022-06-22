@@ -118,7 +118,6 @@ router.get('/games/:game_id', game.getGameById);
  * /games/image/{game_id}:
  *   get:
  *     summary: "Get game's image by id"
- *     description: "This route is NOT intended to be used in Swagger, it's just for documentation, since it's an image, it's just a huge string of hexadecimal characters."
  *     tags: [Games]
  *     parameters:
  *       - in: path
@@ -129,15 +128,15 @@ router.get('/games/:game_id', game.getGameById);
  *         description: "The game id"
  *     responses:
  *       200:
- *         description: "The game description by id"
+ *         description: "The game's image"
  *         content:
  *           application/json:
  *             schema:
  *                 type: object
  *                 properties:
  *                   image:
- *                     type: blob
- *                     example: "just a laaaarge hexadecimal string"
+ *                     type: jpg
+ *                     example: "<a game image>"
  *       404:
  *         description: "Game not found"
  *       400:

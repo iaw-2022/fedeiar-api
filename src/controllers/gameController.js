@@ -41,7 +41,7 @@ const getGameById = async (request, response) => {
 const getGameImageById = async (request, response) => {
     let game_id = request.params.game_id.toString();
     try{
-        const getQuery = `SELECT game_name, image FROM games WHERE id=${escape.literal(game_id)}`;
+        const getQuery = `SELECT id, image FROM games WHERE id=${escape.literal(game_id)}`;
         let result = await pool.query(getQuery);
         if(result.rowCount == 0){
             response.status(404).json({"message": `Game with ID ${game_id} doesn't exists`, "code": 404});
@@ -49,9 +49,10 @@ const getGameImageById = async (request, response) => {
         }
         let game = result.rows[0];
         const fs = require('fs');
-        fs.writeFile(game.game_name+".jpg", "data:image/jpg;base64,"+game.image, {encoding: 'base64'}, function(err) {
-            console.log(err);
-        });
+        const path = require('path');
+        fs.writeFileSync("public/"+game.id+".jpg", ""+game.image, "base64");
+        let image_path = path.join(__dirname, `../../public/${game.id}.jpg`);
+        response.status(200).sendFile(image_path);
         
         /*
         response.contentType("image/jpeg");
@@ -63,7 +64,7 @@ const getGameImageById = async (request, response) => {
         image = image.toString('utf-8');
         console.log(image);
         */
-        response.status(200).json("data:image/png;base64,"+game.image);
+        //response.status(200).json("data:image/png;base64,"+game.image);
     } catch(error){
         if(errorCodes.invalidType(error)){
             response.status(400).json({"message": `Error: ID must be number`, "code": 400});
