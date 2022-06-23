@@ -50,7 +50,7 @@ const getGameImageById = async (request, response) => {
         let game = result.rows[0];
         const fs = require('fs');
         const path = require('path');
-        fs.writeFileSync("public/"+game.id+".jpg", ""+game.image, "base64");
+        fs.writeFileSync("public/"+game.id+".jpg", game.image.toString(), "base64");
         let image_path = path.join(__dirname, `../../public/${game.id}.jpg`);
         response.status(200).sendFile(image_path);
         
