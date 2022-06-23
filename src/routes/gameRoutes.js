@@ -32,11 +32,15 @@ const game = require('../controllers/gameController.js');
  *         updated_at:
  *           type: string
  *           description: "Game's auto-generated last update date"
+ *         image_URL:
+ *           type: string
+ *           description: "The relative route of the image."
  *       example:
  *           id: "1"
  *           game_name: "Klonoa"
  *           created_at: "2022-05-12 03:53:45"
  *           updated_at: "2022-05-12 03:53:45"
+ *           image_URL: "/games/image/1"
  */
 
 /**
@@ -68,11 +72,12 @@ const game = require('../controllers/gameController.js');
  *                   game_name: "Klonoa"
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
+ *                   image_URL: "/games/image/1"
  *                 - id: "2"
  *                   game_name: "Dark Cloud"
  *                   created_at: "2022-05-12 03:53:45"
  *                   updated_at: "2022-05-12 03:53:45"
- *               
+ *                   image_URL: "/games/image/2"
  */
 router.get('/games', game.getGames);
 
@@ -104,6 +109,39 @@ router.get('/games', game.getGames);
  *         description: "Server error"
 */
 router.get('/games/:game_id', game.getGameById);
+
+/** 
+ * @swagger
+ * /games/image/{game_id}:
+ *   get:
+ *     summary: "Get game's image by id"
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: game_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "The game id"
+ *     responses:
+ *       200:
+ *         description: "The game's image"
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                   image:
+ *                     type: jpg
+ *                     example: "<a game image>"
+ *       404:
+ *         description: "Game not found"
+ *       400:
+ *         description: "Invalid ID"
+ *       500:
+ *         description: "Server error"
+*/
+router.get('/games/image/:game_id', game.getGameImageById);
 
 
 // EXPORT

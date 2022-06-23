@@ -413,7 +413,7 @@ router.post('/videos', checkJwt, video.createVideo);
  *               time: 420
  *     responses:
  *       204:
- *         description: "Video successfully created"
+ *         description: "Video successfully updated"
  *       400:
  *         description: "non-existing IDs in JSON, invalid JSON or game name already exists"
  *       404:
